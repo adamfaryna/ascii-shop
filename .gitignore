@@ -1,2 +1,5 @@
 node_modules
 bower_components
+static/app.js
+static/style.css
+*.map
