@@ -1,9 +1,14 @@
 {
 	"parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module"
-  },
+	    "ecmaVersion": 6,
+	    "sourceType": "module"
+	},
   env: {
     es6: true
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "no-console": 1,
+    "no-unused-vars": 1
   }
 }
