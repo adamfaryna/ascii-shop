@@ -37,6 +37,23 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+      all: {
+        files: [{
+          expand: true,
+          cwd: 'client',
+          src: ['partials', 'index.html'],
+          desc: 'static'
+        }]
+      }
+    },
+
+    wiredep: {
+      task: {
+        src: [ 'static/index.html'],
+      }
+    },
+
     less: {
       options: {
         paths: ['static/bower_components/bootstrap/less'],
@@ -85,7 +102,7 @@ module.exports = function(grunt) {
       },
     },
 
-    jshint: {
+    eshint: {
     	all: ['Gruntfile.js', 'karma.config.js', 'client/**/*.es6']
   	},
 
@@ -132,13 +149,12 @@ module.exports = function(grunt) {
     }
   });
 
-  // grunt tasks
   grunt.registerTask('default', ['dev']);
-  grunt.registerTask('dev', ['css', 'js', 'concurrent:dev']);
-  grunt.registerTask('js', ['browserify:dev']);
+  grunt.registerTask('dev', ['css', 'js', 'copy', 'concurrent:dev']);
+  grunt.registerTask('js', ['browserify:dev', 'wiredep']);
   grunt.registerTask('css', ['less:dev', 'autoprefixer:dev']);
 
   // testing
   grunt.registerTask('test', ['lint', 'karma:unit']);
-  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('lint', ['eslint']);
 };

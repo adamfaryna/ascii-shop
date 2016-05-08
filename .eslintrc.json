@@ -1,10 +1,24 @@
 {
-	"parserOptions": {
-	    "ecmaVersion": 6,
-	    "sourceType": "module"
-	},
-  env: {
-    es6: true
+  "extends": "eslint:recommended",
+
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jquery": true,
+    "jasmine": true,
+    "angular": true
+  },
+  "plugins": [ "html" ],
+  "settings": {
+      "html/indent": "0",
+      "html/indent": "+2",
+      "html/indent": "space",
+      "html/no-eval": "off"
   },
   "rules": {
     "indent": ["error", 2],

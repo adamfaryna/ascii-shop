@@ -5,9 +5,9 @@ module.exports = function(config) {
     files: [
       'bower_components/angular/angular.min.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      "bower_components/bootstrap/bootstrap.min.js",
-      "bower_components/angular-route/angular-route.min.js",
-      'client/src/**/*.js'
+      'bower_components/bootstrap/bootstrap.min.js',
+      'bower_components/angular-route/angular-route.min.js',
+       'client/src/**/*.js'
     ],
 
     exclude: [],
@@ -35,9 +35,9 @@ module.exports = function(config) {
     browserify: {
       debug: true,
       transform: [
-      	['babelify', {
-        	presets: ['es2015']
-				}]
+        ['babelify', {
+          presets: ['es2015']
+        }]
       ]
     },
 
