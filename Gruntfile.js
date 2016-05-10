@@ -13,26 +13,28 @@ module.exports = function(grunt) {
 	         ['babelify', {
 	           presets: ['es2015']
 	         }],
+           ['reactify'],
 	         ['uglifyify']
           ]
         },
         files: {
-          'static/app.js' : 'client/src/**/*.es6'
+          'static/js/app.js' : 'client/src/**/*.es6'
         }
       },
       dev: {
         options: {
           transform: [
-                ['babelify', {
-                  presets: ['es2015']
-                }]
+            ['babelify', {
+              presets: ['es2015']
+            }],
+            ['reactify']
           ],
           browserifyOptions: {
             debug: true
           }
         },
         files: {
-          'static/app.js' : 'client/src/**/*.es6'
+          'static/js/app.js' : 'client/src/**/*.es6'
         }
       }
     },
@@ -41,9 +43,9 @@ module.exports = function(grunt) {
       all: {
         files: [{
           expand: true,
-          cwd: 'client',
-          src: ['partials', 'index.html'],
-          desc: 'static'
+          cwd: 'client/src/',
+          src: ['partials/**', 'index.html'],
+          dest: 'static/'
         }]
       }
     },
@@ -54,34 +56,44 @@ module.exports = function(grunt) {
       }
     },
 
+    inject: {
+      dist: {
+        files: {
+          'static/index.html': 'static/index.html'
+        },
+        scriptsrc: 'static/js/app.min.js'
+      },
+      dev: {
+        files: {
+          'static/index.html': 'static/index.html'
+        },
+        scriptsrc: 'static/js/app.js'
+      }
+    },
+
+    inject_css: {
+      dist: {
+        files: {
+          'static/index.html': 'static/css/style.min.css'
+        }
+      },
+      dev: {
+        files: {
+          'static/index.html': 'static/css/style.css'
+        }
+      }
+    },
+
     less: {
       options: {
         paths: ['static/bower_components/bootstrap/less'],
-        sourceMap: true
       },
       dist: {
         options: {
           outputStyle: 'compressed'
         },
         files: {
-          'static/style.css': 'client/src/less/style.less'
-        }
-      },
-      dev: {
-        files: {
-          'static/style.css': 'client/src/less/style.less'
-        }
-      }
-    },
-
-    autoprefixer: {
-      options: {
-        browsers: ['last 2 versions', 'ie 8', 'ie 9'],
-        map: true
-      },
-      dist:{
-        files:{
-          'static/style.css': 'static/style.css'
+          'static/css/style.css': 'client/src/less/style.less'
         }
       },
       dev: {
@@ -89,9 +101,43 @@ module.exports = function(grunt) {
           sourceMap: true
         },
         files: {
-          'static/style.css': 'static/style.css'
+          'static/css/style.css': 'client/src/less/style.less'
         }
       }
+    },
+
+    autoprefixer: {
+      options: {
+        browsers: ['last 2 versions', 'ie 8', 'ie 9']
+      },
+      dist:{
+        files:{
+          'static/css/style.css': 'static/css/style.css'
+        }
+      },
+      dev: {
+        options: {
+          map: true
+        },
+        files: {
+          'static/css/style.css': 'static/css/style.css'
+        }
+      }
+    },
+
+    useminPrepare: {
+      options: {
+        dest: 'static/css'
+      },
+      html: 'static/index.html'
+    },
+
+    usemin: {
+      options: {
+        dirs: ['dist']
+      },
+      html: ['static/index.html'],
+      css: ['static/css/**/*.css']
     },
 
     karma: {
@@ -111,25 +157,29 @@ module.exports = function(grunt) {
         options: {
           reload: true
         },
-        files: ['Gruntfile.js']
+        files: 'Gruntfile.js'
       },
 
       less: {
         files: 'client/src/less/**/*.less',
-        tasks: ['dev']
+        tasks: ['css:dev']
       },
 
       js: {
         files: 'client/src/js/**/*.es6',
-        tasks: ['js']
+        tasks: ['js:dev']
       },
 
       css: {
-        files: 'static/**/*.css',
-        tasks: ['css'],
         options: {
           livereload: true //port 35729
-        }
+        },
+        files: 'static/**/*.css'
+      },
+
+      html: {
+        files: ['client/src/**/*.html'],
+        tasks: ['inject_all:dev']
       }
     },
 
@@ -150,9 +200,14 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['dev']);
-  grunt.registerTask('dev', ['css', 'js', 'copy', 'concurrent:dev']);
-  grunt.registerTask('js', ['browserify:dev', 'wiredep']);
-  grunt.registerTask('css', ['less:dev', 'autoprefixer:dev']);
+  grunt.registerTask('dev', ['css:dev', 'js:dev', 'inject_all:dev', 'concurrent']);
+  grunt.registerTask('dist', ['css:dist', 'js:dist', 'inject_all:dist']);
+  grunt.registerTask('js:dev', ['browserify:dev']);
+  grunt.registerTask('js:dist', ['browserify:dist']);
+  grunt.registerTask('inject_all:dev', ['copy', 'wiredep', 'inject:dev', 'inject_css:dev']);
+  grunt.registerTask('inject_all:dist', ['copy', 'wiredep', 'inject:dist', 'inject_css:dist']);
+  grunt.registerTask('css:dev', ['less:dev', 'autoprefixer:dev']);
+  grunt.registerTask('css:dist', ['less:dist', 'autoprefixer:dist']);
 
   // testing
   grunt.registerTask('test', ['lint', 'karma:unit']);
