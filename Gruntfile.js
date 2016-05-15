@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
-	'use strict';
+  'use strict';
 
-	require('jit-grunt')(grunt);
+  require('jit-grunt')(grunt);
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -10,11 +10,11 @@ module.exports = function(grunt) {
       dist: {
         options: {
           transform: [
-	         ['babelify', {
-	           presets: ['es2015']
-	         }],
-           ['reactify'],
-	         ['uglifyify']
+           ['babelify', {
+             presets: ['es2015', 'react']
+           }],
+           // ['reactify', { 'es6': true}],
+           ['uglifyify']
           ]
         },
         files: {
@@ -25,9 +25,9 @@ module.exports = function(grunt) {
         options: {
           transform: [
             ['babelify', {
-              presets: ['es2015']
-            }],
-            ['reactify']
+              presets: ['es2015', 'react']
+            }]
+            // ['reactify']
           ],
           browserifyOptions: {
             debug: true
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
 
     less: {
       options: {
-        paths: ['static/bower_components/bootstrap/less'],
+        paths: ['static/bower_components/bootstrap/less']
       },
       dist: {
         options: {
@@ -133,7 +133,7 @@ module.exports = function(grunt) {
               'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
               'static/bower_components/jquery/dist/jquery.min.js',
               'static/bower_components/react/react.min.js',
-              'static/bower_components/react/react-dom.min.js',
+              // 'static/bower_components/react/react-dom.min.js',
               'static/bower_components/moment/min/moment.min.js'
             ]
           }
@@ -156,12 +156,12 @@ module.exports = function(grunt) {
         configFile: './karma.conf.js',
         autoWatch: true,
         singleRun: false
-      },
+      }
     },
 
-    eshint: {
-    	all: ['Gruntfile.js', 'karma.config.js', 'client/**/*.es6']
-  	},
+    eslint: {
+      all: ['Gruntfile.js', 'karma.config.js', 'client/**/*.es6']
+    },
 
     watch: {
       grunt: {

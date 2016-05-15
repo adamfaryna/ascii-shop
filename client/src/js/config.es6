@@ -1,4 +1,4 @@
-app.config(['$routeProvider', '$locationProvider',  ($routeProvider, $locationProvider) => {
+angular.module('app').config(['$routeProvider', '$locationProvider',  ($routeProvider, $locationProvider) => {
   'use strict';
 
   $locationProvider.html5mode(true);

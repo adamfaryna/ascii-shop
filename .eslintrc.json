@@ -1,5 +1,5 @@
 {
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "angular"],
 
   "parserOptions": {
     "ecmaVersion": 6,
@@ -10,10 +10,9 @@
     "browser": true,
     "node": true,
     "jquery": true,
-    "jasmine": true,
-    "angular": true
+    "jasmine": true
   },
-  "plugins": [ "html" ],
+  "plugins": [ "html", "react", "angular" ],
   "settings": {
       "html/indent": "0",
       "html/indent": "+2",

@@ -1,3 +1,3 @@
 'use strict';
 
-const app = angular.mobule('app', ['ngRoute']);
+angular.module('app', ['ngRoute']);
