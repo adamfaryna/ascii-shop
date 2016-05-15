@@ -132,7 +132,9 @@ module.exports = function(grunt) {
               'static/bower_components/angular/angular.min.js',
               'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
               'static/bower_components/jquery/dist/jquery.min.js',
-              'static/bower_components/react/react.min.js'
+              'static/bower_components/react/react.min.js',
+              'static/bower_components/react/react-dom.min.js',
+              'static/bower_components/moment/min/moment.min.js'
             ]
           }
         ]
