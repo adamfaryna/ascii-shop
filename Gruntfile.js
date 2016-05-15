@@ -65,13 +65,9 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'static/index.html': [
-            'static/js/app.min.js',
-            'static/bower_components/angular-route/angular-route.min.js',
-            'static/bower_components/angular/angular.min.js',
-            'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
-            'static/bower_components/jquery/dist/jquery.min.js',
-            'static/bower_components/react/react.min.js',
-            'static/css/style.min.css'
+            'static/js/external.min.*.js',
+            'static/js/app.min.*.js',
+            'static/css/*.min.*.css'
           ]
         }
       },
@@ -126,19 +122,31 @@ module.exports = function(grunt) {
       }
     },
 
-    useminPrepare: {
-      options: {
-        dest: 'static/css'
-      },
-      html: 'static/index.html'
+    concat: {
+      dist: {
+        files: [
+          {
+            dest: 'static/js/external.min.js',
+            src: [
+              'static/bower_components/angular-route/angular-route.min.js',
+              'static/bower_components/angular/angular.min.js',
+              'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
+              'static/bower_components/jquery/dist/jquery.min.js',
+              'static/bower_components/react/react.min.js'
+            ]
+          }
+        ]
+      }
     },
 
-    usemin: {
+    filerev: {
       options: {
-        dirs: ['dist']
+        algorithm: 'md5',
+        length: 8
       },
-      html: ['static/index.html'],
-      css: ['static/css/**/*.css']
+      dist: {
+        src: ['static/js/*.min.js', 'static/css/*.min.css']
+      }
     },
 
     karma: {
@@ -205,8 +213,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['dev']);
-  grunt.registerTask('dev', ['css:dev', 'js:dev', 'inject:dev', 'concurrent']);
-  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'inject:dist']);
+  grunt.registerTask('dev', ['clean', 'css:dev', 'js:dev', 'inject:dev', 'concurrent']);
+  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'concat:dist', 'filerev:dist', 'inject:dist']);
   grunt.registerTask('js:dev', ['browserify:dev']);
   grunt.registerTask('js:dist', ['browserify:dist']);
   grunt.registerTask('inject:dev', ['copy', 'wiredep', 'injector:dev']);
