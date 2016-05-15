@@ -18,7 +18,7 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          'static/js/app.js' : 'client/src/**/*.es6'
+          'static/js/app.min.js' : 'client/src/**/*.es6'
         }
       },
       dev: {
@@ -52,34 +52,35 @@ module.exports = function(grunt) {
 
     wiredep: {
       task: {
-        src: [ 'static/index.html'],
+        src: [ 'static/index.html']
       }
     },
 
-    inject: {
-      dist: {
-        files: {
-          'static/index.html': 'static/index.html'
-        },
-        scriptsrc: 'static/js/app.min.js'
+    injector: {
+      options: {
+        template: 'static/index.html',
+        addRootSlash: false,
+        relative: true
       },
-      dev: {
-        files: {
-          'static/index.html': 'static/index.html'
-        },
-        scriptsrc: 'static/js/app.js'
-      }
-    },
-
-    inject_css: {
       dist: {
         files: {
-          'static/index.html': 'static/css/style.min.css'
+          'static/index.html': [
+            'static/js/app.min.js',
+            'static/bower_components/angular-route/angular-route.min.js',
+            'static/bower_components/angular/angular.min.js',
+            'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
+            'static/bower_components/jquery/dist/jquery.min.js',
+            'static/bower_components/react/react.min.js',
+            'static/css/style.min.css'
+          ]
         }
       },
       dev: {
         files: {
-          'static/index.html': 'static/css/style.css'
+          'static/index.html': [
+            'static/js/app.js',
+            'static/css/style.css'
+          ]
         }
       }
     },
@@ -93,7 +94,7 @@ module.exports = function(grunt) {
           outputStyle: 'compressed'
         },
         files: {
-          'static/css/style.css': 'client/src/less/style.less'
+          'static/css/style.min.css': 'client/src/less/style.less'
         }
       },
       dev: {
@@ -112,7 +113,7 @@ module.exports = function(grunt) {
       },
       dist:{
         files:{
-          'static/css/style.css': 'static/css/style.css'
+          'static/css/style.min.css': 'static/css/style.min.css'
         }
       },
       dev: {
@@ -199,17 +200,17 @@ module.exports = function(grunt) {
     },
 
     clean: {
-      all: ['static/**/*.*', '!static/bower_components']
+      all: ['static/*', '!static/bower_components']
     }
   });
 
   grunt.registerTask('default', ['dev']);
-  grunt.registerTask('dev', ['css:dev', 'js:dev', 'inject_all:dev', 'concurrent']);
-  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'inject_all:dist']);
+  grunt.registerTask('dev', ['css:dev', 'js:dev', 'inject:dev', 'concurrent']);
+  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'inject:dist']);
   grunt.registerTask('js:dev', ['browserify:dev']);
   grunt.registerTask('js:dist', ['browserify:dist']);
-  grunt.registerTask('inject_all:dev', ['copy', 'wiredep', 'inject:dev', 'inject_css:dev']);
-  grunt.registerTask('inject_all:dist', ['copy', 'wiredep', 'inject:dist', 'inject_css:dist']);
+  grunt.registerTask('inject:dev', ['copy', 'wiredep', 'injector:dev']);
+  grunt.registerTask('inject:dist', ['copy', 'injector:dist']);
   grunt.registerTask('css:dev', ['less:dev', 'autoprefixer:dev']);
   grunt.registerTask('css:dist', ['less:dist', 'autoprefixer:dist']);
 
