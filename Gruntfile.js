@@ -196,12 +196,16 @@ module.exports = function(grunt) {
       dev: {
         script: './index.js'
       }
+    },
+
+    clean: {
+      all: ['static/**/*.*', '!static/bower_components']
     }
   });
 
   grunt.registerTask('default', ['dev']);
   grunt.registerTask('dev', ['css:dev', 'js:dev', 'inject_all:dev', 'concurrent']);
-  grunt.registerTask('dist', ['css:dist', 'js:dist', 'inject_all:dist']);
+  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'inject_all:dist']);
   grunt.registerTask('js:dev', ['browserify:dev']);
   grunt.registerTask('js:dist', ['browserify:dist']);
   grunt.registerTask('inject_all:dev', ['copy', 'wiredep', 'inject:dev', 'inject_css:dev']);

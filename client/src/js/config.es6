@@ -5,7 +5,7 @@ app.config(['$routeProvider', '$locationProvider',  ($routeProvider, $locationPr
 
   $routeProvider
     .when('/main', {
-      templateUrl: '../partials/main.html',
+      templateUrl: 'partials/main.html',
       controller: 'MainCtrl'
     }).otherwise({
       redirectTo: '/main'
