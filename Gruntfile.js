@@ -171,7 +171,7 @@ module.exports = function(grunt) {
         files: 'Gruntfile.js'
       },
 
-      less: {
+      css: {
         files: 'client/src/less/**/*.less',
         tasks: ['css:dev']
       },
@@ -181,22 +181,15 @@ module.exports = function(grunt) {
         tasks: ['js:dev']
       },
 
-      css: {
-        options: {
-          livereload: true //port 35729
-        },
-        files: 'static/**/*.css'
-      },
-
       html: {
         files: ['client/src/**/*.html'],
-        tasks: ['inject_all:dev']
+        tasks: ['inject:dev']
       }
     },
 
     concurrent: {
       dev: {
-        tasks: ['nodemon', 'watch:js', 'watch:css'],
+        tasks: ['nodemon', 'watch:js', 'watch:css', 'watch:html'],
         options: {
           logConcurrentOutput: true
         }
@@ -205,7 +198,12 @@ module.exports = function(grunt) {
 
     nodemon: {
       dev: {
-        script: './index.js'
+        script: './index.js',
+        options: {
+          env: {
+            PORT: 8000
+          }
+        }
       }
     },
 
