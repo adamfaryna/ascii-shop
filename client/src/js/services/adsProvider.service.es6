@@ -1,12 +1,20 @@
-angular.module('app').service('adsProviderService', ['$http', 'serverAddress', 'loggerService', function($http, serverAddress, loggerService) {
-  'use strict';
+angular.module('app').factory('adsProviderService',
+  ['$http', 'serverAddress', '$log',
+  function($http, serverAddress, $log) {
+    'use strict';
 
-  let lastAdHash;
+    let lastAdHash;
 
-  this.getAd = () =>
-    $http.get(`${serverAddress}/api`)
-      .then( res => {
-        console.log(res);
-      })
-      .catch(loggerService.err);
-}]);
+    function getAd() {
+      return $http.get(`${serverAddress}/api`)
+        .then( res => {
+          $log.log(res);
+        })
+        .catch($log.error);
+    }
+
+    return {
+      getAd
+    };
+  }]
+);

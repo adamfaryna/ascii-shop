@@ -5,6 +5,9 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
+  "ecmaFeatures": {
+    "jsx": true
+  },
   "env": {
     "es6": true,
     "browser": true,
@@ -24,6 +27,8 @@
     "no-console": 1,
     "no-unused-vars": 1,
     "react/jsx-quotes": 0,
-    "jsx-quotes": [2, "prefer-double"]
+    "jsx-quotes": [2, "prefer-double"],
+    "angular/controller-name": "off",
+    "angular/di": [2, "array"]
   }
 }

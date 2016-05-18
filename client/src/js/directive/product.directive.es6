@@ -1,4 +1,4 @@
-app.directive('dawProduct', ['partialsPath', (partialsPath) => {
+angular.module('app').directive('dawProduct', ['partialsPath', (partialsPath) => {
   'use strict';
 
   return {
@@ -8,7 +8,7 @@ app.directive('dawProduct', ['partialsPath', (partialsPath) => {
       product: '='
     },
     templateUrl: `${partialsPath}/product.html`,
-    link(scope, elm, attrs) {
+    link(scope, elm) {
 
       // size
       // price

@@ -1,13 +1,15 @@
 angular.module('app').config(['$routeProvider', '$locationProvider',  ($routeProvider, $locationProvider) => {
   'use strict';
 
-  $locationProvider.html5mode(true);
+  console.log('aaaaa');
+  $locationProvider.html5Mode(true);
 
   $routeProvider
-    .when('/main', {
+    .when('/', {
       templateUrl: 'partials/main.html',
       controller: 'MainCtrl'
-    }).otherwise({
-      redirectTo: '/main'
+    })
+    .otherwise({
+      redirectTo: '/'
     });
 }]);
