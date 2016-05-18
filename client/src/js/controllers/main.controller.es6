@@ -3,13 +3,16 @@ angular.module('app').controller('MainCtrl',
   ($scope, $window, $interval, $log, productProviderService, adsProviderService) => {
     'use strict';
 
-    let currentScrollPosition = 0;
+    // let currentScrollPosition = 0;
 
-    $interval( () => {
-      productProviderService.getProducts().then($log.log)
-      adsProviderService.getAd();
+    $scope.products = [];
 
-    }, 1000);
+    productProviderService.getProducts().then( res => {
+      $log.log(res);
+      $scope.products.push(res);
+    } );
+
+      // adsProviderService.getAd();
 
 
     // angular.element($window).bind('scroll', () => {
