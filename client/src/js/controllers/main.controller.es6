@@ -7,7 +7,7 @@ angular.module('app').controller('MainCtrl',
 
     $scope.products = [];
 
-    productProviderService.getProducts().then( res => {
+    productProviderService.getProducts(10).then( res => {
       $log.log(res);
       $scope.products.push(res);
     } );

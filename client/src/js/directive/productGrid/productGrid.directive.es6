@@ -1,7 +1,7 @@
 angular.module('app').directive('dawProductGrid', [()=> {
   'use strict';
 
-  const component = require('./productGrid');
+  const ProductGrid = require('./productGrid.component.es6');
 
   return {
     restrict: 'E',
@@ -12,8 +12,8 @@ angular.module('app').directive('dawProductGrid', [()=> {
 
     },
     link(scope, elm) {
-      scope.$watch('products', () => {
-        React.render(component, elm[0]);
+      scope.$watch('products', products => {
+        ReactDOM.render(<ProductGrid {products} />, elm[0]);
       });
     }
   };

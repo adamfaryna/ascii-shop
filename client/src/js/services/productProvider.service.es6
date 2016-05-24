@@ -3,6 +3,8 @@ angular.module('app').factory('productProviderService',
   function($log, $q, Oboe, serverAddress) {
     'use strict';
 
+    const Product = require('../model/product.model.es6');
+
     function prepareQueryParams(limit, sort) {
       let limitParam = limit ? 'limit=' + limit : '';
       let sortParam = sort ? 'sort=' + sort : '';
@@ -18,6 +20,8 @@ angular.module('app').factory('productProviderService',
           url: `${serverAddress}/api${queryParams}`,
           pattern: '{index}',
           done(parsedJSON) {
+            // JSON.parse() parsedJSON
+
             resolve(parsedJSON);
           }
         }).then(angular.noop, $log.error);
