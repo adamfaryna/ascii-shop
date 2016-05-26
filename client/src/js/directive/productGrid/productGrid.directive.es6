@@ -6,14 +6,18 @@ angular.module('app').directive('dawProductGrid', [()=> {
   return {
     restrict: 'E',
     scope: {
-      products: '='
+      elements: '='
     },
     controller() {
 
     },
     link(scope, elm) {
-      scope.$watch('products', products => {
-        ReactDOM.render(<ProductGrid {products} />, elm[0]);
+      scope.$on('$destroy', () => {
+        React.unmountComponentAtNode(elm[0]);
+      });
+
+      scope.$watchCollection('elements', products => {
+        ReactDOM.render(<ProductGrid elements={products} />, elm[0]);
       });
     }
   };

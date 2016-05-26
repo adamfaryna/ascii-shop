@@ -1,48 +1,48 @@
 'use strict';
 
-// const React = require('react');
-// const Component = React.Component;
-
-const Product = require('../model/product.model.es6');
+const ProductModel = require('../../model/product.model.es6');
+const Product = require('./product.component.es6');
 
 module.exports = class DawProductGrid extends React.Component {
 
-  static contextTypes() {
-    return {
-      products: React.PropTypes.instanceOf(Product).isRequired
-    }
+  // static contextTypes = {
+    // products: React.PropTypes.instanceOf(ProductModel).isRequired
+    // columns:
+  // };
+
+  shouldCreateNewRow(index) {
+    return index !== 0 && index % 3 === 0;
   }
 
-  shouldCreateNewRow(productIndex) {
-    return productIndex % 3 === 0;
-  }
-
-  destroy() {
-    ReactDOM.unmountComponentAtNode(this._container);
+  createRow(elems) {
+    return React.createElement('div', { className: 'row' }, ...elems);
   }
 
   render() {
-    const products = [];
-    let loopIndex;
-    let loopProduct;
+    console.log('props: ' + JSON.stringify(this.props.elements));
+    if (this.props.elements) {
+      const rows = [];
+      const elems = [];
 
+      this.props.elements.forEach( (element, index) => {
+        elems.push(React.createElement(<Product data={element}/>));
 
-    return (
-      <div>
-      {this.props.products.map( (product, index) => {
-        loopProduct = product;
-        loopIndex = index;
-      })}
+        if (index !== 0 && index % 3 === 0) {
+          rows.push(this.createRow(elems));
+          elems.empty();
+        }
+      })
 
-      {this.shouldCreateNewRow(loopIndex) ? <div className="row"> : null}
+      rows.push(this.createRow(elems));
+      console.log(rows);
 
-        <div className="col-xs-6">
-          <daw-product product="{loopProduct}"></daw-product>
-        </div>
-
-        {( () => this.shouldCreateNewRow(loopIndex) ? '</div>' : null)() }
-
-      </div>
+      return (
+        React.createElement('div', ...rows)
       );
+
+    } else {
+      return (<div></div>);
+    }
+
   }
 };

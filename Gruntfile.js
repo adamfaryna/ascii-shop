@@ -122,24 +122,24 @@ module.exports = function(grunt) {
       }
     },
 
-    concat: {
-      dist: {
-        files: [
-          {
-            dest: 'static/js/external.min.js',
-            src: [
-              'static/bower_components/angular-route/angular-route.min.js',
-              'static/bower_components/angular/angular.min.js',
-              'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
-              'static/bower_components/jquery/dist/jquery.min.js',
-              'static/bower_components/react/react.min.js',
-              // 'static/bower_components/react/react-dom.min.js',
-              'static/bower_components/moment/min/moment.min.js'
-            ]
-          }
-        ]
-      }
-    },
+    // concat: {
+    //   dist: {
+    //     files: [
+    //       {
+    //         dest: 'static/js/external.min.js',
+    //         src: [
+    //           'static/bower_components/angular-route/angular-route.min.js',
+    //           'static/bower_components/angular/angular.min.js',
+    //           'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
+    //           'static/bower_components/jquery/dist/jquery.min.js',
+    //           'static/bower_components/react/react.min.js',
+    //           'static/bower_components/react/react-dom.min.js',
+    //           'static/bower_components/moment/min/moment.min.js'
+    //         ]
+    //       }
+    //     ]
+    //   }
+    // },
 
     filerev: {
       options: {
@@ -147,7 +147,7 @@ module.exports = function(grunt) {
         length: 8
       },
       dist: {
-        src: ['static/js/*.min.js', 'static/css/*.min.css']
+        src: ['static/js/app.min.js', 'static/css/app.min.css']
       }
     },
 

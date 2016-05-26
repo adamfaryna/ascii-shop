@@ -1,9 +1,12 @@
 {
-  "extends": ["eslint:recommended", "angular"],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
 
   "parserOptions": {
     "ecmaVersion": 6,
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "ecmaFeatures": {
     "jsx": true
@@ -13,22 +16,15 @@
     "browser": true,
     "node": true,
     "jquery": true,
-    "jasmine": true
+    "jasmine": true,
+    "angular": true
   },
-  "plugins": [ "html", "react", "angular" ],
-  "settings": {
-      "html/indent": "0",
-      "html/indent": "+2",
-      "html/indent": "space",
-      "html/no-eval": "off"
-  },
+  "plugins": [ "react" ],
   "rules": {
     "indent": ["error", 2],
     "no-console": 1,
     "no-unused-vars": 1,
     "react/jsx-quotes": 0,
-    "jsx-quotes": [2, "prefer-double"],
-    "angular/controller-name": "off",
-    "angular/di": [2, "array"]
+    "jsx-quotes": [2, "prefer-double"]
   }
 }

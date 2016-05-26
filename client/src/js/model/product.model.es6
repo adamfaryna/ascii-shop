@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = class Product {
+module.exports = class ProductModel {
   constructor(id, size, price, face, date) {
     this.id = id;
     this.size = size;
