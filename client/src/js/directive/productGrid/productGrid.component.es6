@@ -24,8 +24,8 @@ module.exports = class DawProductGrid extends React.Component {
       const rows = [];
       const elems = [];
 
-      this.props.products.forEach( (element, index) => {
-        elems.push(React.createElement(<Product data={element}/>));
+      this.props.products.forEach( (product, index) => {
+        elems.push(React.createElement(<Product product={product}/>));
 
         if (index !== 0 && index % 3 === 0) {
           rows.push(this.createRow(elems));

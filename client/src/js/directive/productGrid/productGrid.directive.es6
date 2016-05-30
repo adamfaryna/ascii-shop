@@ -6,7 +6,7 @@ angular.module('app').directive('dawProductGrid',
     const ProductGrid = require('./productGrid.component.es6');
 
     const DEFAULT_COLUMNS_NUMBER = 3;
-    const DEFAULT_PRODUCTS_DISPLAY_LIMIT = 10;
+    const DEFAULT_PRODUCTS_DISPLAY_LIMIT = 20;
     const DEFAULT_SORT = 'id';
     const DEFAULT_SHOW_CONTROLS = true;
 

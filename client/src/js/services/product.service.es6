@@ -36,7 +36,10 @@ angular.module('app').provider('productService',
           .then( res => {
             if (res && res.length !== 0) {
               noMoreData = false;
-              getCache(sort).push(new ProductElement(res));
+
+              res.data.forEach( item => {
+                getCache(sort).push(new ProductElement(item));
+              });
 
             } else {
               noMoreData = true;
