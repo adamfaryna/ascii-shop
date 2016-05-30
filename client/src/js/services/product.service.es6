@@ -9,8 +9,8 @@ angular.module('app').provider('productService',
     };
 
     this.$get =
-      ['$log', '$q', 'Oboe', 'serverAddress', 'sortTypes',
-      ($log, $q, Oboe, serverAddress, sortTypes) => {
+      ['$log', '$q', '$http', 'serverAddress', 'sortTypes', 'utils',
+      ($log, $q, $http, serverAddress, sortTypes, utils) => {
         const ProductElement = require('../model/productElement.model.es6');
 
         const cacheByPrice = [];
@@ -31,18 +31,20 @@ angular.module('app').provider('productService',
         }
 
         function fetchProducts(sort, limit = fetchLimit) {
-          return fetchPromise = fetchPromise
+          fetchPromise = fetchPromise
           .then( () => pullProducts(getCache(sort).length, calcFetchLimit(limit)))
           .then( res => {
-            if (res.length === 0) {
-              noMoreData = true;
-
-            } else {
+            if (res && res.length !== 0) {
               noMoreData = false;
               getCache(sort).push(new ProductElement(res));
+
+            } else {
+              noMoreData = true;
             }
           })
           .catch($log.error);
+
+          return fetchPromise;
         }
 
         function calcFetchLimit(clientLimit = fetchLimit) {
@@ -65,15 +67,23 @@ angular.module('app').provider('productService',
           return `${limitParam || sortParam ? '?' : ''}${limitParam}${sortParam}`;
         }
 
+        function newLineJSONTransform(response) {
+          let result = utils.replaceAll(response, '}', '},');
+          result = result.slice(0, -2); // remove trailing ','
+          return JSON.parse(`[${result}]`);
+        }
+
         function pullProducts(limit, sort) {
           const queryParams = prepareQueryParams(limit, sort);
 
-          return $q( resolve => {
-            Oboe({
-              url: `${serverAddress}/api${queryParams}`,
-              pattern: '{index}'
-            }).then(resolve, $log.error);
-          });
+          return $http.get(`${serverAddress}/api${queryParams}`, {
+            transformResponse: newLineJSONTransform
+          })
+          .then( items => {
+            $log.log(items);
+            return items;
+          })
+          .catch($log.error);
         }
 
         function getProducts(sort, limit) {

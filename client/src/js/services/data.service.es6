@@ -22,7 +22,8 @@ angular.module('app').provider('dataService',
           }
 
           getProductsWithAds(sort, limit) {
-            return productService.getProducts(sort, limit).then(this.addAds);
+            return productService.getProducts(sort, limit);
+            // .then(this.addAds);
           }
 
           addAds(products) {

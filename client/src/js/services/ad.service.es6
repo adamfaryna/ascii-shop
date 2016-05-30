@@ -32,18 +32,20 @@ angular.module('app').factory('adService',
     let pullAdPromise = $q.resolve();
 
     function pullAd(adId) {
-      return pullAdPromise = pullAdPromise
+      pullAdPromise = pullAdPromise
         .then( () =>
           $http.get(`${serverAddress}/ad?r=${adId}`)
             .then( ad => {
+              $log.log(ad);
               let adObj = {
                 id: adId,
                 data: ad
               };
 
               return _.set(cache, adId, adObj);
-            })
-            .catch($log.error));
+            }))
+        .catch($log.error);
+      return pullAdPromise
     }
 
     function getAd(lastAdId) {

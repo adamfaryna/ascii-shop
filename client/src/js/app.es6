@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('app', ['ngRoute', 'ngOboe']);
+angular.module('app', ['ngRoute']);

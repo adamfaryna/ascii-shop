@@ -19,12 +19,12 @@ module.exports = class DawProductGrid extends React.Component {
   }
 
   render() {
-    console.log('props: ' + JSON.stringify(this.props.elements));
-    if (this.props.elements) {
+    console.log('props: ' + JSON.stringify(this.props.products));
+    if (this.props.products) {
       const rows = [];
       const elems = [];
 
-      this.props.elements.forEach( (element, index) => {
+      this.props.products.forEach( (element, index) => {
         elems.push(React.createElement(<Product data={element}/>));
 
         if (index !== 0 && index % 3 === 0) {
@@ -33,7 +33,10 @@ module.exports = class DawProductGrid extends React.Component {
         }
       })
 
-      rows.push(this.createRow(elems));
+      if (elems.length !== 0) {
+        rows.push(this.createRow(elems));
+      }
+
       console.log(rows);
 
       return (
@@ -41,7 +44,9 @@ module.exports = class DawProductGrid extends React.Component {
       );
 
     } else {
-      return (undefined);
+      return (
+        React.createElement('div')
+      );
     }
 
   }

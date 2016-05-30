@@ -34,13 +34,13 @@ angular.module('app').directive('dawProductGrid',
         scope.showProgressBar = true;
         scope.noMoreProducts = false;
 
-        const productsContainer = $('.daw-elements', elm);
+        const productsContainer = $('.daw-elements', elm)[0];
 
         scope.$on('$destroy', () => {
-          React.unmountComponentAtNode(productsContainer);
+          ReactDOM.unmountComponentAtNode(productsContainer);
         });
 
-        scope.$watchCollection('data.elements', (newVal, oldVal) => {
+        scope.$watchCollection('data.products', (newVal, oldVal) => {
           if (newVal) {
             ReactDOM.render(<ProductGrid products={newVal} />, productsContainer);
 
@@ -60,7 +60,6 @@ angular.module('app').directive('dawProductGrid',
           scope.showProgressBar();
           const productsNumToFetch =
             scope.data.products.length ? scope.data.products.length + scope.limit : scope.limit;
-
           dataService.getData(scope.sort, productsNumToFetch)
           .then( products => {
             scope.data.products = products;
