@@ -12,7 +12,8 @@
     "angular-route": "^1.5.5",
     "react": "^15.0.2",
     "moment": "^2.13.0",
-    "angular-oboe": "*"
+    "angular-oboe": "*",
+    "lodash": "^4.13.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.5"

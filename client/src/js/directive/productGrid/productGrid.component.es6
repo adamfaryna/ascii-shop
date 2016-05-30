@@ -1,12 +1,12 @@
 'use strict';
 
-const ProductModel = require('../../model/product.model.es6');
+const ProductElement = require('../../model/productElement.model.es6');
 const Product = require('./product.component.es6');
 
 module.exports = class DawProductGrid extends React.Component {
 
   // static contextTypes = {
-    // products: React.PropTypes.instanceOf(ProductModel).isRequired
+    // products: React.PropTypes.instanceOf(ProductElement).isRequired
     // columns:
   // };
 
@@ -41,7 +41,7 @@ module.exports = class DawProductGrid extends React.Component {
       );
 
     } else {
-      return (<div></div>);
+      return (undefined);
     }
 
   }

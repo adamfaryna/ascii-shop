@@ -16,8 +16,13 @@
     "browser": true,
     "node": true,
     "jquery": true,
-    "jasmine": true,
-    "angular": true
+    "jasmine": true
+  },
+  "globals": {
+    "angular": true,
+    "React": true,
+    "ReactDOM": true,
+    "_": true
   },
   "plugins": [ "react" ],
   "rules": {

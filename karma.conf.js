@@ -7,7 +7,7 @@ module.exports = function(config) {
       'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/bootstrap/bootstrap.min.js',
       'bower_components/angular-route/angular-route.min.js',
-       'client/src/**/*.js'
+      'client/src/**/*.js'
     ],
 
     exclude: [],
