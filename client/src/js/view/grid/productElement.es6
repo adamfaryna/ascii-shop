@@ -22,10 +22,10 @@ module.exports = class ProductElement extends GridElement {
           <span>size: {this.size}</span>
         </div>
         <div className="price">
-          <span>price: {this.price}</span>
+          <span>price: {this.price}$</span>
         </div>
         <div className="date">
-          <span>date added: {moment(this.date).format('MMMM Do YYYY, h:mm:ss a')}</span>
+          <span>date added: {moment(this.date).fromNow()}</span>
         </div>
       </div>
     );

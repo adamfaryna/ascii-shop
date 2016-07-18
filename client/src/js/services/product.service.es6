@@ -71,9 +71,14 @@ angular.module('app').provider('productService',
         }
 
         function newLineJSONTransform(response) {
-          let result = utils.replaceAll(response, '}', '},');
-          result = result.slice(0, -2); // remove trailing ','
-          return JSON.parse(`[${result}]`);
+          if (response === null) {
+            return null;
+
+          } else {
+            let result = utils.replaceAll(response, '}', '},');
+            result = result.slice(0, -2); // remove trailing ','
+            return JSON.parse(`[${result}]`);
+          }
         }
 
         function pullProducts(limit, sort) {
@@ -83,7 +88,6 @@ angular.module('app').provider('productService',
             transformResponse: newLineJSONTransform
           })
           .then( items => {
-            $log.log(items);
             return items;
           })
           .catch($log.error);

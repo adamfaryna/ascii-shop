@@ -1,4 +1,4 @@
-angular.module('app').directive('dawProductGrid',
+angular.module('app').directive('dawGrid',
   ['$window', '$document', '$log', '$timeout', 'dataService', 'partialsPath',
   ($window, $document, $log, $timeout, dataService, partialsPath) => {
     'use strict';
@@ -51,12 +51,13 @@ angular.module('app').directive('dawProductGrid',
         });
 
         $document.on('scroll', elm, () => {
-          if (isScrolledToEnd(this)) {
+          if (isScrolledToEnd()) {
             scope.prepareShowMoreProducts();
           }
         });
 
         scope.showMoreProducts = () => {
+          $log.log('show more');
           scope.showProgressBar();
           const productsNumToFetch =
             scope.data.products.length ? scope.data.products.length + scope.limit : scope.limit;
@@ -66,8 +67,6 @@ angular.module('app').directive('dawProductGrid',
           }, $log.error)
           .then(scope.hideProgressBar);
         };
-
-        // TODO  display animated loading message when loading new data
 
         scope.showProgressBar = () => {
           scope.isShowProgressBar = true;
@@ -86,14 +85,14 @@ angular.module('app').directive('dawProductGrid',
             $timeout.cancel(scope.showMoreProductsPromise);
           }
 
-          scope.showMoreProductsPromise = $timeout(scope.showMoreProducts, 250);
+          scope.showMoreProductsPromise = $timeout(scope.showMoreProducts, 150);
         };
 
         // prefetch initial data
         scope.showMoreProducts();
 
         function isScrolledToEnd() {
-          return elm.scrollTop() + elm.innerHeight() >= elm[0].scrollHeight;
+          return $document.height() <= $($window).height() + $($window).scrollTop();
         }
       }
     };

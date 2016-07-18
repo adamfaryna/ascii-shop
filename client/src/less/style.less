@@ -1,20 +1,39 @@
-daw-product-grid .daw-elements {
+daw-grid {
+  .daw-grid-controls {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+
+    daw-product-grid-control {
+      width: 150px;
+    }
+  }
+
+  .daw-elements {
    .row {
       display: flex;
       flex-wrap: nowrap;
       justify-content: center;
       align-items: baseline;
       align-content: stretch;
-      // min-height: 100px;
-      // max-height: 100px;
 
       .element {
         display: inline-block;
-        // min-width: 200px;
-        // max-width: 200px;
+        width: 200px;
+        height: 100px;
         border: 2px solid;
         margin: 10px;
         padding: 10px;
+
+        div {
+          margin-bottom: 5px;
+        }
+      }
+
+      .element .face {
+        text-align: center;
+        margin-bottom: 15px;
       }
    }
+  }
 }

@@ -1,7 +1,9 @@
 <div>
-  <daw-product-grid-control ng-show="showControls"></daw-product-grid-control>
+  <div class="daw-grid-controls">
+    <daw-grid-control ng-show="showControls" sort="sort"></daw-grid-control>
+  </div>
   <div class="daw-elements"></div>
-  <div class="daw-progress-bar" ng-show="isShowProgressBar"></div>
+  <div class="daw-progress-bar" ng-show="isShowProgressBar">loading...</div>
   <div ng-show="noMoreData">
     <span>~ end of catalogue ~</span>
   </div>
