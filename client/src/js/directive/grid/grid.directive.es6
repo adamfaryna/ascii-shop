@@ -3,7 +3,7 @@ angular.module('app').directive('dawProductGrid',
   ($window, $log, $timeout, dataService, partialsPath) => {
     'use strict';
 
-    const ProductGrid = require('./productGrid.component.es6');
+    const Grid = require('./grid.component.es6');
 
     const DEFAULT_COLUMNS_NUMBER = 3;
     const DEFAULT_PRODUCTS_DISPLAY_LIMIT = 20;
@@ -18,7 +18,7 @@ angular.module('app').directive('dawProductGrid',
         showControls: '@',
         sort: '@'
       },
-      templateUrl: `${partialsPath}/productGrid.html`,
+      templateUrl: `${partialsPath}/Grid.html`,
       controller() {
         // add sort option (combo box)
 
@@ -42,7 +42,7 @@ angular.module('app').directive('dawProductGrid',
 
         scope.$watchCollection('data.products', (newVal, oldVal) => {
           if (newVal) {
-            ReactDOM.render(<ProductGrid products={newVal} />, productsContainer);
+            ReactDOM.render(<Grid elements={newVal} />, productsContainer);
 
             if (newVal.length < oldVal + scope.limit) {
               scope.noMoreProducts = true;

@@ -1,14 +1,14 @@
 'use strict';
 
-const ProductElement = require('../../model/productElement.model.es6');
-const Product = require('./product.component.es6');
+const GridElement = require('./gridElement.component.es6');
 
 module.exports = class DawProductGrid extends React.Component {
 
-  // static contextTypes = {
-    // products: React.PropTypes.instanceOf(ProductElement).isRequired
-    // columns:
-  // };
+  static get propTypes() {
+    return {
+      elements: React.PropTypes.instanceOf(Array).isRequired
+    };
+  }
 
   shouldCreateNewRow(index) {
     return index !== 0 && index % 3 === 0;
@@ -19,25 +19,22 @@ module.exports = class DawProductGrid extends React.Component {
   }
 
   render() {
-    console.log('props: ' + JSON.stringify(this.props.products));
-    if (this.props.products) {
+    if (this.props.elements) {
       const rows = [];
-      const elems = [];
+      let elems = [];
 
-      this.props.products.forEach( (product, index) => {
-        elems.push(React.createElement(<Product product={product}/>));
+      this.props.elements.forEach( (product, index) => {
+        elems.push(<GridElement element={product}/>);
 
-        if (index !== 0 && index % 3 === 0) {
+        if (this.shouldCreateNewRow(index)) {
           rows.push(this.createRow(elems));
-          elems.empty();
+          elems = [];
         }
       })
 
       if (elems.length !== 0) {
         rows.push(this.createRow(elems));
       }
-
-      console.log(rows);
 
       return (
         React.createElement('div', ...rows)
@@ -48,6 +45,5 @@ module.exports = class DawProductGrid extends React.Component {
         React.createElement('div')
       );
     }
-
   }
 };

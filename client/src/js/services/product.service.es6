@@ -11,7 +11,7 @@ angular.module('app').provider('productService',
     this.$get =
       ['$log', '$q', '$http', 'serverAddress', 'sortTypes', 'utils',
       ($log, $q, $http, serverAddress, sortTypes, utils) => {
-        const ProductElement = require('../model/productElement.model.es6');
+        const ProductElement = require('../view/grid/productElement.es6');
 
         const cacheByPrice = [];
         const cacheBySize = [];
