@@ -1,6 +1,6 @@
 angular.module('app').directive('dawProductGrid',
-  ['$window', '$log', '$timeout', 'dataService', 'partialsPath',
-  ($window, $log, $timeout, dataService, partialsPath) => {
+  ['$window', '$document', '$log', '$timeout', 'dataService', 'partialsPath',
+  ($window, $document, $log, $timeout, dataService, partialsPath) => {
     'use strict';
 
     const Grid = require('./grid.component.es6');
@@ -50,8 +50,8 @@ angular.module('app').directive('dawProductGrid',
           }
         });
 
-        elm.on('scroll', () => {
-          if (isScrolledToEnd()) {
+        $document.on('scroll', elm, () => {
+          if (isScrolledToEnd(this)) {
             scope.prepareShowMoreProducts();
           }
         });
@@ -70,11 +70,11 @@ angular.module('app').directive('dawProductGrid',
         // TODO  display animated loading message when loading new data
 
         scope.showProgressBar = () => {
-          scope.showProgressBar = true;
+          scope.isShowProgressBar = true;
         };
 
         scope.hideProgressBar = () => {
-          scope.showProgressBar = false;
+          scope.isShowProgressBar = false;
         };
 
         scope.showNoMoreProducts = () => {
@@ -93,7 +93,7 @@ angular.module('app').directive('dawProductGrid',
         scope.showMoreProducts();
 
         function isScrolledToEnd() {
-          return elm.scrollTop() + elm.innerHeight() >= elm.scrollHeight
+          return elm.scrollTop() + elm.innerHeight() >= elm[0].scrollHeight;
         }
       }
     };

@@ -82,9 +82,9 @@ module.exports = function(grunt) {
     },
 
     less: {
-      options: {
-        paths: ['static/bower_components/bootstrap/less']
-      },
+      // options: {
+      //   paths: ['static/bower_components/bootstrap/less']
+      // },
       dist: {
         options: {
           outputStyle: 'compressed'
