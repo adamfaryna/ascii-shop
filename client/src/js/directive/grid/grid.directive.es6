@@ -4,10 +4,12 @@ angular.module('app').directive('dawGrid',
     'use strict';
 
     const Grid = require('./grid.component.es6');
+    const Sort = require('../../model/sort.es6');
 
     const DEFAULT_COLUMNS_NUMBER = 3;
     const DEFAULT_PRODUCTS_DISPLAY_LIMIT = 20;
-    const DEFAULT_SORT = 'id';
+    const DEFAULT_SORT_TYPE = 'id';
+    const DEFAULT_SORT_ORDER = null;
     const DEFAULT_SHOW_CONTROLS = true;
 
     return {
@@ -16,19 +18,16 @@ angular.module('app').directive('dawGrid',
         limit: '@',
         columns: '@',
         showControls: '@',
-        sort: '@'
+        sortType: '@',
+        sortOrder: '@'
       },
       templateUrl: `${partialsPath}/Grid.html`,
-      controller() {
-        // add sort option (combo box)
-
-
-      },
       link(scope, elm) {
         scope.limit = scope.limit || DEFAULT_PRODUCTS_DISPLAY_LIMIT;
         scope.columns = scope.columns || DEFAULT_COLUMNS_NUMBER;
         scope.showControls = scope.columns || DEFAULT_SHOW_CONTROLS;
-        scope.sort = scope.sort || DEFAULT_SORT;
+        scope.sortType = scope.sortType || DEFAULT_SORT_TYPE;
+        scope.sortOrder = scope.sortOrder || DEFAULT_SORT_ORDER;
 
         scope.data = { products: [] };
         scope.showProgressBar = true;
@@ -61,7 +60,8 @@ angular.module('app').directive('dawGrid',
           scope.showProgressBar();
           const productsNumToFetch =
             scope.data.products.length ? scope.data.products.length + scope.limit : scope.limit;
-          dataService.getData(scope.sort, productsNumToFetch)
+          const sort = new Sort(scope.sortType, scope.sortOrder);
+          dataService.getData(sort, productsNumToFetch)
           .then( products => {
             scope.data.products = products;
           }, $log.error)
@@ -87,6 +87,16 @@ angular.module('app').directive('dawGrid',
 
           scope.showMoreProductsPromise = $timeout(scope.showMoreProducts, 150);
         };
+
+        scope.sortChange = () => {
+          scope.showProgressBar();
+          const sort = new Sort(scope.sortType, scope.sortOrder);
+          dataService.getData(sort, scope.data.products.length)
+            .then( products => {
+              scope.data.products = products;
+            }, $log.error)
+            .then(scope.hideProgressBar);
+        }
 
         // prefetch initial data
         scope.showMoreProducts();

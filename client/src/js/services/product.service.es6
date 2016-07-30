@@ -11,6 +11,7 @@ angular.module('app').provider('productService',
     this.$get =
       ['$log', '$q', '$http', 'serverAddress', 'sortTypes', 'utils',
       ($log, $q, $http, serverAddress, sortTypes, utils) => {
+        const Sort = require('../model/sort.es6');
         const ProductElement = require('../view/grid/productElement.es6');
 
         const cacheByPrice = [];
@@ -25,7 +26,7 @@ angular.module('app').provider('productService',
 
         function prefetchData() {
           return $q( resolve => {
-            sortTypes.forEach( sort => fetchProducts(sort));
+            sortTypes.forEach( sort => fetchProducts(new Sort(sort, null)));
             resolve();
           });
         }
@@ -45,9 +46,20 @@ angular.module('app').provider('productService',
               noMoreData = true;
             }
           })
+          .then( () => sortCache(sort))
           .catch($log.error);
 
           return fetchPromise;
+        }
+
+        /**
+         * Change cache elements order. Chainable.
+         */
+        function sortCache(sort) {
+          if (sort.sortOrder === 'ascending') {
+            getCache(sort).sort( (a, b) => a - b);
+          }
+          return getCache(sort);
         }
 
         function calcFetchLimit(clientLimit = fetchLimit) {
@@ -55,7 +67,7 @@ angular.module('app').provider('productService',
         }
 
         function getCache(sort) {
-          switch (sort) {
+          switch (sort.sortType) {
           case 'price': return cacheByPrice;
           case 'size': return cacheBySize;
           case 'id': return cacheById;

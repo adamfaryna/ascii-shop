@@ -1,6 +1,10 @@
 <label>
   Sort by:
-  <select ng-model="sort">
-    <option value="{{option}}" ng-repeat="option in options track by $index">{{option}}</option>
+  <select ng-model="sortType">
+    <option value="{{option}}" ng-repeat="option in sortTypeItems track by $index">{{option}}</option>
   </select>
+</label>
+<label>
+  Ascending:
+  <input type="checkbox" ng-model="sortOrder">
 </label>
