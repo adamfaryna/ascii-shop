@@ -7,19 +7,20 @@ angular.module('app').directive('dawGridControl',
 
     return {
       restrict: 'EC',
+      require: '^^dawGrid',
       scope: {
-        sortChange: '&',
+        sortChange: '=',
         sortType: '=',
         sortOrder: '='
       },
       templateUrl: `${partialsPath}/gridControl.html`,
-      link(scope) {
+      link(scope, elem, attrs, gridCtrl) {
         scope.sortTypeItems = sortTypes;
         scope.sortOrderItems = sortOrders;
 
         scope.$watchGroup([ 'sortType', 'sortOrder' ], (newVals, oldVals, scope) => {
           const sort = new Sort(newVals[0], newVals[1] === true ? 'ascending' : null);
-          scope.sortChange(sort);
+          gridCtrl.sortChange(sort);
         });
       }
     };

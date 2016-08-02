@@ -22,6 +22,28 @@ angular.module('app').directive('dawGrid',
         sortOrder: '@'
       },
       templateUrl: `${partialsPath}/Grid.html`,
+      controller: ['$scope', function($scope) {
+        $scope.isShowProgressBar = true;
+
+        $scope.showProgressBar = () => {
+          $scope.isShowProgressBar = true;
+        };
+
+        $scope.hideProgressBar = () => {
+          $scope.isShowProgressBar = false;
+        };
+
+        this.sortChange = (sort) => {
+          $scope.showProgressBar();
+          dataService.getData(sort, $scope.data.products.length)
+            .then( products => {
+              $timeout( () => {
+                $scope.data.products = products;
+              });
+            }, $log.error)
+            .then($scope.hideProgressBar);
+        }
+      }],
       link(scope, elm) {
         scope.limit = scope.limit || DEFAULT_PRODUCTS_DISPLAY_LIMIT;
         scope.columns = scope.columns || DEFAULT_COLUMNS_NUMBER;
@@ -30,7 +52,6 @@ angular.module('app').directive('dawGrid',
         scope.sortOrder = scope.sortOrder || DEFAULT_SORT_ORDER;
 
         scope.data = { products: [] };
-        scope.showProgressBar = true;
         scope.noMoreProducts = false;
 
         const productsContainer = $('.daw-elements', elm)[0];
@@ -68,14 +89,6 @@ angular.module('app').directive('dawGrid',
           .then(scope.hideProgressBar);
         };
 
-        scope.showProgressBar = () => {
-          scope.isShowProgressBar = true;
-        };
-
-        scope.hideProgressBar = () => {
-          scope.isShowProgressBar = false;
-        };
-
         scope.showNoMoreProducts = () => {
           scope.noMoreProducts = true;
         };
@@ -87,16 +100,6 @@ angular.module('app').directive('dawGrid',
 
           scope.showMoreProductsPromise = $timeout(scope.showMoreProducts, 150);
         };
-
-        scope.sortChange = () => {
-          scope.showProgressBar();
-          const sort = new Sort(scope.sortType, scope.sortOrder);
-          dataService.getData(sort, scope.data.products.length)
-            .then( products => {
-              scope.data.products = products;
-            }, $log.error)
-            .then(scope.hideProgressBar);
-        }
 
         // prefetch initial data
         scope.showMoreProducts();

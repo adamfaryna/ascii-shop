@@ -32,21 +32,22 @@ angular.module('app').provider('productService',
         }
 
         function fetchProducts(sort, limit = fetchLimit) {
+          const cache = getCache(sort);
+
           fetchPromise = fetchPromise
-          .then( () => pullProducts(getCache(sort).length, calcFetchLimit(limit)))
+          .then( () => pullProducts(cache.length, calcFetchLimit(limit)))
           .then( res => {
             if (res && res.length !== 0) {
               noMoreData = false;
 
               res.data.forEach( item => {
-                getCache(sort).push(new ProductElement(item));
+                cache.push(new ProductElement(item));
               });
 
             } else {
               noMoreData = true;
             }
           })
-          .then( () => sortCache(sort))
           .catch($log.error);
 
           return fetchPromise;
@@ -55,11 +56,17 @@ angular.module('app').provider('productService',
         /**
          * Change cache elements order. Chainable.
          */
-        function sortCache(sort) {
-          if (sort.sortOrder === 'ascending') {
-            getCache(sort).sort( (a, b) => a - b);
+        function sortCache(sortObj) {
+          let sortCallback;
+
+          if (sortObj.sortOrder === 'ascending') {
+            sortCallback = (a, b) => a[sortObj.sortType] - b[sortObj.sortType];
+
+          } else {
+            sortCallback = (a, b) => b[sortObj.sortType] - a[sortObj.sortType]
           }
-          return getCache(sort);
+
+          return getCache(sortObj).sort(sortCallback);
         }
 
         function calcFetchLimit(clientLimit = fetchLimit) {
@@ -116,7 +123,9 @@ angular.module('app').provider('productService',
             fetchProducts(sort);
           }
 
-          return promise.then( () => getCache(sort).slice(0, limit));
+          return promise
+            .then( () => sortCache(sort))
+            .then( cache => cache.slice(0, limit));
         }
 
         return {
