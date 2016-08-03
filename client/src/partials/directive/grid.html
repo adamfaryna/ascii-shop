@@ -1,10 +1,10 @@
 <div>
-  <div class="daw-grid-controls">
-    <daw-grid-control ng-show="showControls" sort-type="sortType" sort-order="sortOrder"></daw-grid-control>
+  <div class="daw-grid-controls" ng-show="showControls">
+    <daw-grid-control sort-type="sortType" sort-order="sortOrder"></daw-grid-control>
   </div>
   <div class="daw-elements"></div>
   <div class="daw-progress-bar" ng-show="isShowProgressBar">loading...</div>
-  <div ng-show="noMoreData">
+  <div class="daw-no-more-data" ng-show="noMoreData">
     <span>~ end of catalogue ~</span>
   </div>
 </div>

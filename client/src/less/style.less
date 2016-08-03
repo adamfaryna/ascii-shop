@@ -1,3 +1,7 @@
+body {
+  -webkit-text-size-adjust: none;
+}
+
 daw-grid {
   .daw-grid-controls {
     display: flex;
@@ -30,10 +34,11 @@ daw-grid {
       .element {
         display: inline-block;
         width: 200px;
-        height: 100px;
+        height: 140px;
         border: 2px solid;
         margin: 10px;
         padding: 10px;
+        line-height: 20px;
 
         div {
           margin-bottom: 5px;
@@ -42,7 +47,11 @@ daw-grid {
 
       .element .face {
         text-align: center;
-        margin-bottom: 15px;
+        margin: 15px 0;
+
+        span {
+          line-height: 10px;
+        }
       }
    }
   }

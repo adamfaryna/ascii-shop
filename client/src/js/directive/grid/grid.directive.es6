@@ -9,7 +9,7 @@ angular.module('app').directive('dawGrid',
     const DEFAULT_COLUMNS_NUMBER = 3;
     const DEFAULT_PRODUCTS_DISPLAY_LIMIT = 20;
     const DEFAULT_SORT_TYPE = 'id';
-    const DEFAULT_SORT_ORDER = null;
+    const DEFAULT_SORT_ORDER = 'descending';
     const DEFAULT_SHOW_CONTROLS = true;
 
     return {
@@ -23,21 +23,36 @@ angular.module('app').directive('dawGrid',
       },
       templateUrl: `${partialsPath}/Grid.html`,
       controller: ['$scope', function($scope) {
-        $scope.isShowProgressBar = true;
+        $timeout( () => {
+          $scope.limit = $scope.limit ? parseInt($scope.limit) : DEFAULT_PRODUCTS_DISPLAY_LIMIT;
+          $scope.columns = $scope.columns ? parseInt($scope.columns) : DEFAULT_COLUMNS_NUMBER;
+          $scope.showControls = $scope.showControls ? $scope.showControls === 'true' : DEFAULT_SHOW_CONTROLS;
+          $scope.sortType = $scope.sortType || DEFAULT_SORT_TYPE;
+          $scope.sortOrder = $scope.sortOrder || DEFAULT_SORT_ORDER;
+
+          $scope.isShowProgressBar = true;
+          $scope.data = { products: [] };
+          $scope.noMoreData = false;
+        });
 
         $scope.showProgressBar = () => {
-          $scope.isShowProgressBar = true;
+          $timeout( () => {
+            $scope.isShowProgressBar = true;
+          });
         };
 
         $scope.hideProgressBar = () => {
-          $scope.isShowProgressBar = false;
+          $timeout( () => {
+            $scope.isShowProgressBar = false;
+          });
         };
 
-        this.sortChange = (sort) => {
+        this.sortChange = sort => {
           $scope.showProgressBar();
-          dataService.getData(sort, $scope.data.products.length)
+          dataService.getData(sort, DEFAULT_PRODUCTS_DISPLAY_LIMIT)
             .then( products => {
               $timeout( () => {
+                $scope.noMoreData = products.length < $scope.limit;
                 $scope.data.products = products;
               });
             }, $log.error)
@@ -45,28 +60,15 @@ angular.module('app').directive('dawGrid',
         }
       }],
       link(scope, elm) {
-        scope.limit = scope.limit || DEFAULT_PRODUCTS_DISPLAY_LIMIT;
-        scope.columns = scope.columns || DEFAULT_COLUMNS_NUMBER;
-        scope.showControls = scope.columns || DEFAULT_SHOW_CONTROLS;
-        scope.sortType = scope.sortType || DEFAULT_SORT_TYPE;
-        scope.sortOrder = scope.sortOrder || DEFAULT_SORT_ORDER;
-
-        scope.data = { products: [] };
-        scope.noMoreProducts = false;
-
         const productsContainer = $('.daw-elements', elm)[0];
 
         scope.$on('$destroy', () => {
           ReactDOM.unmountComponentAtNode(productsContainer);
         });
 
-        scope.$watchCollection('data.products', (newVal, oldVal) => {
+        scope.$watchCollection('data.products', newVal => {
           if (newVal) {
             ReactDOM.render(<Grid elements={newVal} />, productsContainer);
-
-            if (newVal.length < oldVal + scope.limit) {
-              scope.noMoreProducts = true;
-            }
           }
         });
 
@@ -77,20 +79,16 @@ angular.module('app').directive('dawGrid',
         });
 
         scope.showMoreProducts = () => {
-          $log.log('show more');
           scope.showProgressBar();
           const productsNumToFetch =
             scope.data.products.length ? scope.data.products.length + scope.limit : scope.limit;
           const sort = new Sort(scope.sortType, scope.sortOrder);
           dataService.getData(sort, productsNumToFetch)
           .then( products => {
+            scope.noMoreData = products.length >= scope.data.products.length + scope.limit;
             scope.data.products = products;
           }, $log.error)
           .then(scope.hideProgressBar);
-        };
-
-        scope.showNoMoreProducts = () => {
-          scope.noMoreProducts = true;
         };
 
         scope.prepareShowMoreProducts = () => {
