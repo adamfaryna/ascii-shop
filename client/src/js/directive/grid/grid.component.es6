@@ -11,7 +11,7 @@ module.exports = class DawProductGrid extends React.Component {
   }
 
   shouldCreateNewRow(index) {
-    return index !== 0 && index % 3 === 0;
+    return index % 3 === 0;
   }
 
   createRow(elems) {

@@ -23,38 +23,30 @@ angular.module('app').directive('dawGrid',
       },
       templateUrl: `${partialsPath}/Grid.html`,
       controller: ['$scope', function($scope) {
-        $timeout( () => {
-          $scope.limit = $scope.limit ? parseInt($scope.limit) : DEFAULT_PRODUCTS_DISPLAY_LIMIT;
-          $scope.columns = $scope.columns ? parseInt($scope.columns) : DEFAULT_COLUMNS_NUMBER;
-          $scope.showControls = $scope.showControls ? $scope.showControls === 'true' : DEFAULT_SHOW_CONTROLS;
-          $scope.sortType = $scope.sortType || DEFAULT_SORT_TYPE;
-          $scope.sortOrder = $scope.sortOrder || DEFAULT_SORT_ORDER;
+        $scope.limit = $scope.limit ? parseInt($scope.limit) : DEFAULT_PRODUCTS_DISPLAY_LIMIT;
+        $scope.columns = $scope.columns ? parseInt($scope.columns) : DEFAULT_COLUMNS_NUMBER;
+        $scope.showControls = $scope.showControls ? $scope.showControls === 'true' : DEFAULT_SHOW_CONTROLS;
+        $scope.sortType = $scope.sortType || DEFAULT_SORT_TYPE;
+        $scope.sortOrder = $scope.sortOrder || DEFAULT_SORT_ORDER;
 
-          $scope.isShowProgressBar = true;
-          $scope.data = { products: [] };
-          $scope.noMoreData = false;
-        });
+        $scope.isShowProgressBar = true;
+        $scope.data = { products: [] };
+        $scope.noMoreData = false;
 
         $scope.showProgressBar = () => {
-          $timeout( () => {
-            $scope.isShowProgressBar = true;
-          });
+          $scope.isShowProgressBar = true;
         };
 
         $scope.hideProgressBar = () => {
-          $timeout( () => {
-            $scope.isShowProgressBar = false;
-          });
+          $scope.isShowProgressBar = false;
         };
 
         this.sortChange = sort => {
           $scope.showProgressBar();
           dataService.getData(sort, DEFAULT_PRODUCTS_DISPLAY_LIMIT)
             .then( products => {
-              $timeout( () => {
-                $scope.noMoreData = products.length < $scope.limit;
-                $scope.data.products = products;
-              });
+              $scope.noMoreData = products.length < $scope.limit;
+              $scope.data.products = products;
             }, $log.error)
             .then($scope.hideProgressBar);
         }

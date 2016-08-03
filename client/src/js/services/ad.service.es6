@@ -1,19 +1,22 @@
 angular.module('app').factory('adService',
-  ['$http', 'serverAddress', '$log', '$q',
-  function($http, serverAddress, $log, $q) {
+  ['$http', 'serverAddress', '$log', '$q', 'defaultAdsLimit', 'defaultAdsFetchNumber',
+  function($http, serverAddress, $log, $q, defaultAdsLimit, defaultAdsFetchNumber) {
     'use strict';
 
+    const AdElement = require('../view/grid/adElement.es6');
+
     const cache = {};
+
+    // let pullAdPromise = $q.resolve();
 
     prefetch();
 
     function prefetch() {
-      for (let i = 1; i <= 16; i++) {
+      for (let i = 0; i !== defaultAdsFetchNumber; i++) {
         setTimeout( () => {
-          if(_.get(cache, i, null) === null) {
+          if (_.get(cache, i, null) === null) {
             pullAd(i);
           }
-
         }, 250); // a little timeout to not get banned
       }
     }
@@ -22,36 +25,34 @@ angular.module('app').factory('adService',
       let adId;
 
       do {
-        adId = Math.floor(Math.random() * 16);
+        adId = Math.floor(Math.random() * defaultAdsLimit);
 
       } while (adId === lastAdId);
 
       return adId;
     }
 
-    let pullAdPromise = $q.resolve();
-
     function pullAd(adId) {
-      pullAdPromise = pullAdPromise
-        .then( () =>
-          $http.get(`${serverAddress}/ad?r=${adId}`)
-            .then( ad => {
-              $log.log(ad);
-              let adObj = {
-                id: adId,
-                data: ad
-              };
+      const ad = new AdElement(adId, `${serverAddress}/ad?r=${adId}`);
+      _.set(cache, adId, ad);
+      return ad;
+      // return $http.get(`${serverAddress}/ad?r=${adId}`, {responseType: 'arraybuffer'})
 
-              return _.set(cache, adId, adObj);
-            }))
-        .catch($log.error);
-      return pullAdPromise
+
+
+      //   .then( res => {
+      //     const blob = new Blob([res.data], {type: 'image/jpeg'});
+      //     const adObj = new AdElement(adId, (window.URL || window.webkitURL).createObjectURL(blob));
+
+      //     _.set(cache, adId, adObj);
+      //     return adObj;
+      //   }, $log.error);
     }
 
     function getAd(lastAdId) {
       const adId = randomDifferentAdId(lastAdId);
       const ad = _.get(cache, adId, null);
-      return ad ? $q.resolve(ad) : pullAd(adId);
+      return ad ? ad : pullAd(adId);
     }
 
     return {

@@ -37,7 +37,7 @@ angular.module('app').provider('productService',
           fetchPromise = fetchPromise
           .then( () => pullProducts(cache.length, calcFetchLimit(limit)))
           .then( res => {
-            if (res && res.length !== 0) {
+            if (res && res.data && res.data.length !== 0) {
               noMoreData = false;
 
               res.data.forEach( item => {
@@ -62,11 +62,12 @@ angular.module('app').provider('productService',
           if (sortObj.sortOrder === 'ascending') {
             sortCallback = (a, b) => a[sortObj.sortType] - b[sortObj.sortType];
 
-          } else {
+          } else { // descending
             sortCallback = (a, b) => b[sortObj.sortType] - a[sortObj.sortType]
           }
 
-          return getCache(sortObj).sort(sortCallback);
+          getCache(sortObj).sort(sortCallback);
+          return getCache(sortObj);
         }
 
         function calcFetchLimit(clientLimit = fetchLimit) {
@@ -113,19 +114,17 @@ angular.module('app').provider('productService',
         }
 
         function getProducts(sort, limit) {
-          let promise = $q.resolve();
+          let promise = promise = $q.resolve();
 
           if (getCache(sort).length < limit && !noMoreData) {
             promise = promise.then( () => fetchProducts(sort, limit));
 
           } else if (getCache(sort).length + fetchLimit <= limit) {
-            // if we have less products cached in case of another take, we fetch more product to keep in cache
+            // if we have less products cached in case of another take, we fetch more product for future in background
             fetchProducts(sort);
           }
 
-          return promise
-            .then( () => sortCache(sort))
-            .then( cache => cache.slice(0, limit));
+          return promise.then( () => sortCache(sort)).then( c => _.clone(c));
         }
 
         return {

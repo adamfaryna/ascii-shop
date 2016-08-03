@@ -10,35 +10,36 @@ angular.module('app').provider('dataService',
     };
 
     this.$get =
-      ['$log', '$q', 'productService', 'adService',
-      ($log, $q, productService, adService) => {
+      ['$log', '$q', 'productService', 'adService', '$timeout',
+      ($log, $q, productService, adService, $timeout) => {
         class DataService {
-          get lastAddedAdId() {
-            return this.lastAddedAdId;
-          }
-
-          set lastAddedAdId(lastAddedAdId) {
-            this.lastAddedAdId = lastAddedAdId;
-          }
-
-          getProductsWithAds(sort, limit) {
-            return productService.getProducts(sort, limit);
-            // .then(this.addAds);
+          processGetProductsWithAds(sort, limit) {
+            return productService.getProducts(sort, limit)
+            .then( products => this.addAds(products));
           }
 
           addAds(products) {
-            let promise = $q.resolve();
-
-            for (let i = adOffset; i <= products.length; i += adOffset + 1) {
-              promise = promise
-              .then( () => adService.getAd(this.lastAddedAdId))
-              .then( ad => {
-                this.lastAddedAdId = ad.id;
-                products.splice(i, 0, ad)
-              });
+            for (let i = adOffset + 1; i <= products.length; i += adOffset + 1) {
+              const ad = adService.getAd(this.lastAddedAdId);
+              this.lastAddedAdId = ad.id;
+              products.splice(i, 0, ad);
             }
 
-            return promise;
+            return $q.resolve(products);
+          }
+
+          getProductsWithAds(sort, limit) {
+            if (this.getProductsWithAdsPromise) {
+              $timeout.cancel(this.getProductsWithAdsPromise);
+            }
+
+            const deferred = $q.defer();
+
+            this.getProductsWithAdsPromise = $timeout( () => {
+              this.processGetProductsWithAds(sort, limit).then(deferred.resolve);
+            }, 150);
+
+            return deferred.promise;
           }
 
           getData(sort, limit) {
