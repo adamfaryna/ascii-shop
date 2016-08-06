@@ -13,6 +13,7 @@ angular.module('app').provider('productService',
       ($log, $q, $http, serverAddress, sortTypes, utils) => {
         const Sort = require('../model/sort.es6');
         const ProductElement = require('../view/grid/productElement.es6');
+        const ProductsQueryParam = require('../model/productsQueryParam.es6');
 
         const cacheByPrice = [];
         const cacheBySize = [];
@@ -26,16 +27,17 @@ angular.module('app').provider('productService',
 
         function prefetchData() {
           return $q( resolve => {
-            sortTypes.forEach( sort => fetchProducts(new Sort(sort, null)));
+            sortTypes.forEach( sort => fetchProducts(new Sort(sort), fetchLimit));
             resolve();
           });
         }
 
         function fetchProducts(sort, limit = fetchLimit) {
           const cache = getCache(sort);
+          const queryParams = new ProductsQueryParam(limit, sort, cache.length);
 
           fetchPromise = fetchPromise
-          .then( () => pullProducts(cache.length, calcFetchLimit(limit)))
+          .then( () => pullProducts(queryParams))
           .then( res => {
             if (res && res.data && res.data.length !== 0) {
               noMoreData = false;
@@ -70,10 +72,6 @@ angular.module('app').provider('productService',
           return getCache(sortObj);
         }
 
-        function calcFetchLimit(clientLimit = fetchLimit) {
-          return clientLimit <= fetchLimit ? fetchLimit : clientLimit;
-        }
-
         function getCache(sort) {
           switch (sort.sortType) {
           case 'price': return cacheByPrice;
@@ -83,11 +81,17 @@ angular.module('app').provider('productService',
           }
         }
 
-        function prepareQueryParams(limit, sort) {
-          let limitParam = limit ? 'limit=' + limit : '';
-          let sortParam = sort ? 'sort=' + sort : '';
-          sortParam = limit ? '&' + sortParam : sortParam;
-          return `${limitParam || sortParam ? '?' : ''}${limitParam}${sortParam}`;
+        function prepareQueryParams(queryParams) {
+          const limitParam = queryParams.limit ? `limit=${queryParams.limit}` : '';
+          const sortParam = queryParams.sort ? `sort=${queryParams.sort}` : '';
+          const skipParam = queryParams.skip ? `skip=${queryParams.skip}` : '';
+          let queryString = '';
+
+          [limitParam, sortParam, skipParam].forEach( elem => {
+            queryString += elem ? `&${elem}` : '';
+          });
+
+          return queryString.slice(1);
         }
 
         function newLineJSONTransform(response) {
@@ -101,27 +105,19 @@ angular.module('app').provider('productService',
           }
         }
 
-        function pullProducts(limit, sort) {
-          const queryParams = prepareQueryParams(limit, sort);
-
-          return $http.get(`${serverAddress}/api${queryParams}`, {
+        function pullProducts(queryParams) {
+          const queryString = prepareQueryParams(queryParams);
+          return $http.get(`${serverAddress}/api${queryString}`, {
             transformResponse: newLineJSONTransform
-          })
-          .then( items => {
-            return items;
-          })
-          .catch($log.error);
+          }).catch($log.error);
         }
 
         function getProducts(sort, limit) {
           let promise = promise = $q.resolve();
 
-          if (getCache(sort).length < limit && !noMoreData) {
+          if (!noMoreData) {
             promise = promise.then( () => fetchProducts(sort, limit));
-
-          } else if (getCache(sort).length + fetchLimit <= limit) {
-            // if we have less products cached in case of another take, we fetch more product for future in background
-            fetchProducts(sort);
+            fetchProducts(sort, limit);
           }
 
           return promise.then( () => sortCache(sort)).then( c => _.clone(c));

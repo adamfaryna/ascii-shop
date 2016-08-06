@@ -45,7 +45,7 @@ angular.module('app').directive('dawGrid',
           $scope.showProgressBar();
           dataService.getData(sort, DEFAULT_PRODUCTS_DISPLAY_LIMIT)
             .then( products => {
-              $scope.noMoreData = products.length < $scope.limit;
+              $scope.noMoreData = products.length === 0;
               $scope.data.products = products;
             }, $log.error)
             .then($scope.hideProgressBar);
@@ -77,7 +77,7 @@ angular.module('app').directive('dawGrid',
           const sort = new Sort(scope.sortType, scope.sortOrder);
           dataService.getData(sort, productsNumToFetch)
           .then( products => {
-            scope.noMoreData = products.length >= scope.data.products.length + scope.limit;
+            scope.noMoreData = products.length === 0;
             scope.data.products = products;
           }, $log.error)
           .then(scope.hideProgressBar);
@@ -90,9 +90,6 @@ angular.module('app').directive('dawGrid',
 
           scope.showMoreProductsPromise = $timeout(scope.showMoreProducts, 150);
         };
-
-        // prefetch initial data
-        scope.showMoreProducts();
 
         function isScrolledToEnd() {
           return $document.height() <= $($window).height() + $($window).scrollTop();
