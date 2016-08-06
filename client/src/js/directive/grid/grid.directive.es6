@@ -1,6 +1,6 @@
 angular.module('app').directive('dawGrid',
-  ['$window', '$document', '$log', '$timeout', 'dataService', 'partialsPath',
-  ($window, $document, $log, $timeout, dataService, partialsPath) => {
+  ['$document', '$log', '$timeout', 'dataService', 'partialsPath',
+  ($document, $log, $timeout, dataService, partialsPath) => {
     'use strict';
 
     const Grid = require('./grid.component.es6');
@@ -65,7 +65,7 @@ angular.module('app').directive('dawGrid',
         });
 
         $document.on('scroll', elm, () => {
-          if (isScrolledToEnd()) {
+          if (isScrolledToEnd(elm)) {
             scope.prepareShowMoreProducts();
           }
         });
@@ -91,8 +91,8 @@ angular.module('app').directive('dawGrid',
           scope.showMoreProductsPromise = $timeout(scope.showMoreProducts, 150);
         };
 
-        function isScrolledToEnd() {
-          return $document.height() <= $($window).height() + $($window).scrollTop();
+        function isScrolledToEnd(elm) {
+          return -(elm[0].getBoundingClientRect().top) > $($document).height() / 4;
         }
       }
     };
