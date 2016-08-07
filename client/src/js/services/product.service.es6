@@ -9,8 +9,8 @@ angular.module('app').provider('productService',
     };
 
     this.$get =
-      ['$log', '$q', '$http', 'serverAddress', 'sortTypes', 'utils',
-      ($log, $q, $http, serverAddress, sortTypes, utils) => {
+      ['$rootScope', '$log', '$q', '$http', 'serverAddress', 'sortTypes', 'utils',
+      ($rootScope, $log, $q, $http, serverAddress, sortTypes, utils) => {
         const Sort = require('../model/sort.es6');
         const ProductElement = require('../view/grid/productElement.es6');
         const ProductsQueryParam = require('../model/productsQueryParam.es6');
@@ -27,12 +27,17 @@ angular.module('app').provider('productService',
 
         function prefetchData() {
           return $q( resolve => {
-            sortTypes.forEach( sort => fetchProducts(new Sort(sort), fetchLimit));
+            sortTypes.forEach( sort => { fetchProductsInternal(new Sort(sort), fetchLimit); });
             resolve();
           });
         }
 
-        function fetchProducts(sort, limit = fetchLimit) {
+        function fetchProducts(sort, limit) {
+          fetchPromise = fetchProductsInternal(sort, limit)
+            .then( () => { $rootScope.$emit('productsReady', _.clone(sortCache(sort))); });
+        }
+
+        function fetchProductsInternal(sort, limit = fetchLimit) {
           const cache = getCache(sort);
           const queryParams = new ProductsQueryParam(limit, sort, cache.length);
 
@@ -61,14 +66,16 @@ angular.module('app').provider('productService',
         function sortCache(sortObj) {
           let sortCallback;
 
-          if (sortObj.sortOrder === 'ascending') {
-            sortCallback = (a, b) => a[sortObj.sortType] - b[sortObj.sortType];
+          if (sortObj.sortOrder) {
+            switch(sortObj.sortOrder) {
+            case 'ascending': sortCallback = (a, b) => a[sortObj.sortType] - b[sortObj.sortType]; break;
+            case 'descending': sortCallback = (a, b) => b[sortObj.sortType] - a[sortObj.sortType]; break;
+            default: throw new Error('Invalid sort order!');
+            }
 
-          } else { // descending
-            sortCallback = (a, b) => b[sortObj.sortType] - a[sortObj.sortType]
+            getCache(sortObj).sort(sortCallback);
           }
 
-          getCache(sortObj).sort(sortCallback);
           return getCache(sortObj);
         }
 
@@ -77,7 +84,7 @@ angular.module('app').provider('productService',
           case 'price': return cacheByPrice;
           case 'size': return cacheBySize;
           case 'id': return cacheById;
-          default: throw Error('Invalid sort type');
+          default: throw new Error('Invalid sort type!');
           }
         }
 
@@ -113,14 +120,13 @@ angular.module('app').provider('productService',
         }
 
         function getProducts(sort, limit) {
-          let promise = promise = $q.resolve();
-
           if (!noMoreData) {
-            promise = promise.then( () => fetchProducts(sort, limit));
             fetchProducts(sort, limit);
           }
 
-          return promise.then( () => sortCache(sort)).then( c => _.clone(c));
+          return $q.resolve()
+            .then( () => sortCache(sort))
+            .then( c => _.clone(c));
         }
 
         return {

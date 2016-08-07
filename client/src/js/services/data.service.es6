@@ -10,22 +10,36 @@ angular.module('app').provider('dataService',
     };
 
     this.$get =
-      ['$log', '$q', 'productService', 'adService', '$timeout',
-      ($log, $q, productService, adService, $timeout) => {
+      ['$rootScope', '$log', '$q', 'productService', 'adService', '$timeout',
+      ($rootScope, $log, $q, productService, adService, $timeout) => {
         class DataService {
-          processGetProductsWithAds(sort, limit) {
-            return productService.getProducts(sort, limit)
-            .then( products => this.addAds(products));
+          constructor() {
+            this.initEvents();
           }
 
-          addAds(products) {
-            for (let i = adOffset + 1; i <= products.length; i += adOffset + 1) {
-              const ad = adService.getAd(this.lastAddedAdId);
+          initEvents() {
+            $rootScope.$on('productsReady', (event, products) => {
+              $rootScope.$emit('elementsReady', this.addAdsInternal(products));
+            });
+          }
+
+          processGetProductsWithAds(sort, limit) {
+            return productService.getProducts(sort, limit)
+            .then( products => { return this.addAds(products); });
+          }
+
+          addAdsInternal(products) {
+            for (let i = adOffset + 1, adId = 0; i <= products.length; i += adOffset + 1, adId++) {
+              const ad = adService.getAd(this.lastAddedAdId, adId);
               this.lastAddedAdId = ad.id;
               products.splice(i, 0, ad);
             }
 
-            return $q.resolve(products);
+            return products;
+          }
+
+          addAds(products) {
+            return $q.resolve(this.addAdsInternal(products));
           }
 
           getProductsWithAds(sort, limit) {

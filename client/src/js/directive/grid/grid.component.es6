@@ -19,7 +19,7 @@ module.exports = class DawProductGrid extends React.Component {
   }
 
   render() {
-    if (this.props.elements) {
+    if (this.props.elements && this.props.elements.length !== 0) {
       const rows = [];
       let elems = [];
 

@@ -5,5 +5,4 @@ angular.module('app')
   .constant('sortOrders', [ 'ascending', 'descending' ])
   .constant('defaultProductFetchLimit', 20)
   .constant('defaultAdsLimit', 16)
-  .constant('defaultAdsFetchNumber', 5)
   .constant('defaultAdOffset', 20);
