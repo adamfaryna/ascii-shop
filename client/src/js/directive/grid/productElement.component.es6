@@ -1,11 +1,10 @@
 'use strict';
 
-const GridElement = require('./gridElement.es6');
-// require('react-datetime');
 const moment = require('moment');
-const currencyFilter = angular.injector(["ng"]).get('$filter')('currency');
+const BasicGridElement = require('./basicGridElement.es6');
+const currencyFilter = angular.injector(['ng']).get('$filter')('currency');
 
-module.exports = class ProductElement extends GridElement {
+module.exports = class ProductElement extends BasicGridElement {
   constructor(obj) {
     super(obj.id);
     this.size = obj.size;

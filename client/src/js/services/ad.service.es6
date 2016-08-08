@@ -3,7 +3,7 @@ angular.module('app').factory('adService',
   function($http, serverAddress, $log, $q, defaultAdsLimit) {
     'use strict';
 
-    const AdElement = require('../view/grid/adElement.es6');
+    const AdElement = require('../directive/grid/adElement.component.es6');
     const usedAds = [];
 
     function randomDifferentAdId(lastAdId) {
