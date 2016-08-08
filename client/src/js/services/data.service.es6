@@ -57,6 +57,7 @@ angular.module('app').provider('dataService',
           }
 
           getData(sort, limit) {
+            $rootScope.$emit('elementsLoading');
             return this.getProductsWithAds(sort, limit);
           }
         }

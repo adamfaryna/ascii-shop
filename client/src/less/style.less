@@ -13,14 +13,20 @@ daw-grid {
     }
   }
 
-  .daw-progress-bar {
-    text-align: center;
-    margin: 10px;
+  daw-loading-bar, .daw-loading-bar {
+    position: absolute;
+    margin: 10px 0;
+    left: 48%;
+
+    .daw-loading-bar-prompt {
+      position: relative;
+    }
   }
 
   .daw-no-more-data {
     text-align: center;
     margin: 10px;
+    clear: both;
   }
 
   .daw-elements {
