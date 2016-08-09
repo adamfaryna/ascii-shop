@@ -1,13 +1,14 @@
 module.exports = function(config) {
   config.set({
-    frameworks: ['browserify', 'jasmine'],
+    frameworks: ['browserify', 'jasmine', 'sinon'],
 
     files: [
-      'bower_components/angular/angular.min.js',
-      'bower_components/angular-mocks/angular-mocks.js',
-      'bower_components/bootstrap/bootstrap.min.js',
-      'bower_components/angular-route/angular-route.min.js',
-      'client/src/**/*.js'
+      'static/bower_components/angular/angular.min.js',
+      'static/bower_components/react/react.min.js',
+      'static/bower_components/angular-mocks/angular-mocks.js',
+      // 'static/js/**/*.js'
+      'client/src/js/**/*.es6',
+      'client/test/**/*.es6'
     ],
 
     exclude: [],
@@ -15,7 +16,7 @@ module.exports = function(config) {
     basePath: './',
 
     preprocessors: {
-      'client/src/**/*.es6' : ['browserify'],
+      'client/src/js/**/*.es6': ['browserify'],
       'client/test/**/*.es6': ['browserify']
     },
 
@@ -25,26 +26,30 @@ module.exports = function(config) {
 
     colors: true,
 
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
     autoWatch: false,
     singleRun: true,
 
     browsers: ['PhantomJS'],
+    // browsers: ['Chrome', 'PhantomJS'],
 
     browserify: {
       debug: true,
       transform: [
         ['babelify', {
-          presets: ['es2015']
+          presets: ['es2015', 'react']
         }]
       ]
     },
 
     plugins: [
       'karma-phantomjs-launcher',
+      'karma-chrome-launcher',
       'karma-jasmine',
-      'karma-browserify'
+      'karma-browserify',
+      'karma-junit-reporter',
+      'karma-sinon'
     ]
   });
 };

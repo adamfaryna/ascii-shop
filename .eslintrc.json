@@ -22,7 +22,8 @@
     "angular": true,
     "React": true,
     "ReactDOM": true,
-    "_": true
+    "_": true,
+    "inject": true
   },
   "plugins": [ "react" ],
   "rules": {

@@ -13,7 +13,6 @@ module.exports = function(grunt) {
            ['babelify', {
              presets: ['es2015', 'react']
            }],
-           // ['reactify', { 'es6': true}],
            ['uglifyify']
           ]
         },
@@ -27,7 +26,6 @@ module.exports = function(grunt) {
             ['babelify', {
               presets: ['es2015', 'react']
             }]
-            // ['reactify']
           ],
           browserifyOptions: {
             debug: true
@@ -82,9 +80,6 @@ module.exports = function(grunt) {
     },
 
     less: {
-      // options: {
-      //   paths: ['static/bower_components/bootstrap/less']
-      // },
       dist: {
         options: {
           outputStyle: 'compressed'
@@ -122,25 +117,6 @@ module.exports = function(grunt) {
       }
     },
 
-    // concat: {
-    //   dist: {
-    //     files: [
-    //       {
-    //         dest: 'static/js/external.min.js',
-    //         src: [
-    //           'static/bower_components/angular-route/angular-route.min.js',
-    //           'static/bower_components/angular/angular.min.js',
-    //           'static/bower_components/bootstrap/dist/js/bootstrap.min.js',
-    //           'static/bower_components/jquery/dist/jquery.min.js',
-    //           'static/bower_components/react/react.min.js',
-    //           'static/bower_components/react/react-dom.min.js',
-    //           'static/bower_components/moment/min/moment.min.js'
-    //         ]
-    //       }
-    //     ]
-    //   }
-    // },
-
     filerev: {
       options: {
         algorithm: 'md5',
@@ -155,7 +131,7 @@ module.exports = function(grunt) {
       unit: {
         configFile: './karma.conf.js',
         autoWatch: true,
-        singleRun: false
+        singleRun: true
       }
     },
 
@@ -214,7 +190,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['dev']);
   grunt.registerTask('dev', ['clean', 'css:dev', 'js:dev', 'inject:dev', 'concurrent']);
-  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'concat:dist', 'filerev:dist', 'inject:dist']);
+  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'filerev:dist', 'inject:dist']);
   grunt.registerTask('js:dev', ['browserify:dev']);
   grunt.registerTask('js:dist', ['browserify:dist']);
   grunt.registerTask('inject:dev', ['copy', 'wiredep', 'injector:dev']);
@@ -223,6 +199,6 @@ module.exports = function(grunt) {
   grunt.registerTask('css:dist', ['less:dist', 'autoprefixer:dist']);
 
   // testing
-  grunt.registerTask('test', ['lint', 'karma:unit']);
+  grunt.registerTask('test', ['lint', 'js:dev', 'karma:unit']);
   grunt.registerTask('lint', ['eslint']);
 };

@@ -43,10 +43,14 @@
     "jit-grunt": "^0.10.0",
     "karma": "^0.13.22",
     "karma-browserify": "^5.0.5",
+    "karma-chrome-launcher": "^1.0.1",
     "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sinon": "^1.0.5",
+    "karma-spec-reporter": "0.0.26",
     "phantomjs-prebuilt": "^2.1.7",
     "reactify": "^1.1.1",
+    "sinon": "^1.17.5",
     "uglifyify": "^3.0.1"
   }
 }
