@@ -3,12 +3,16 @@ module.exports = function(config) {
     frameworks: ['browserify', 'jasmine', 'sinon'],
 
     files: [
+      'static/bower_components/jquery/dist/jquery.min.js',
       'static/bower_components/angular/angular.min.js',
-      'static/bower_components/react/react.min.js',
       'static/bower_components/angular-mocks/angular-mocks.js',
-      // 'static/js/**/*.js'
+      'static/bower_components/angular-route/angular-route.min.js',
+      'static/bower_components/lodash/dist/lodash.min.js',
+      'static/bower_components/moment/min/moment.min.js',
+      'static/bower_components/react/react.min.js',
       'client/src/js/**/*.es6',
       'client/test/**/*.es6'
+      // 'static/js/app.js'
     ],
 
     exclude: [],
@@ -16,8 +20,8 @@ module.exports = function(config) {
     basePath: './',
 
     preprocessors: {
-      'client/src/js/**/*.es6': ['browserify'],
-      'client/test/**/*.es6': ['browserify']
+      'client/src/js/**/*.es6': ['babel', 'browserify'],
+      'client/test/**/*.es6': ['babel', 'browserify']
     },
 
     reporters: ['progress'],
@@ -26,21 +30,34 @@ module.exports = function(config) {
 
     colors: true,
 
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_INFO,
 
-    autoWatch: false,
-    singleRun: true,
+    autoWatch: true,
+    singleRun: false,
 
     browsers: ['PhantomJS'],
+    // browsers: ['Chrome'],
     // browsers: ['Chrome', 'PhantomJS'],
 
-    browserify: {
-      debug: true,
-      transform: [
-        ['babelify', {
-          presets: ['es2015', 'react']
-        }]
-      ]
+    // browserify: {
+    //   transform: [
+    //     ['babelify', {
+    //       presets: ['es2015', 'react']
+    //     }]
+    //   ]
+    // },
+
+    babelPreprocessor: {
+      options: {
+        presets: ['es2015', 'react'],
+        sourceMap: 'inline'
+      },
+      filename: function(file) {
+        return file.originalPath.replace(/\.es6$/, '.es6.js');
+      },
+      sourceFileName: function(file) {
+        return file.originalPath;
+      }
     },
 
     plugins: [
@@ -49,7 +66,8 @@ module.exports = function(config) {
       'karma-jasmine',
       'karma-browserify',
       'karma-junit-reporter',
-      'karma-sinon'
+      'karma-sinon',
+      'karma-babel-preprocessor'
     ]
   });
 };

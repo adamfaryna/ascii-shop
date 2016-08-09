@@ -130,7 +130,7 @@ module.exports = function(grunt) {
     karma: {
       unit: {
         configFile: './karma.conf.js',
-        autoWatch: true,
+        autoWatch: false,
         singleRun: true
       }
     },
@@ -199,6 +199,6 @@ module.exports = function(grunt) {
   grunt.registerTask('css:dist', ['less:dist', 'autoprefixer:dist']);
 
   // testing
-  grunt.registerTask('test', ['lint', 'js:dev', 'karma:unit']);
+  grunt.registerTask('test', ['lint', 'karma:unit']);
   grunt.registerTask('lint', ['eslint']);
 };
