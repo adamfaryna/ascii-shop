@@ -3,9 +3,14 @@ angular.module('app').provider('productService',
     'use strict';
 
     let fetchLimit = defaultProductFetchLimit;
+    let prefetchOn = true;
 
     this.setFetchLimit = limit => {
       fetchLimit = limit;
+    };
+
+    this.setPrefetch = prefetch => {
+      prefetchOn = prefetch;
     };
 
     this.$get =
@@ -23,7 +28,9 @@ angular.module('app').provider('productService',
 
         let fetchPromise = $q.resolve();
 
-        prefetchData();
+        if (prefetchOn) {
+          prefetchData();
+        }
 
         function prefetchData() {
           return $q( resolve => {

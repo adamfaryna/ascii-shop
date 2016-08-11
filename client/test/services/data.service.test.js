@@ -7,6 +7,7 @@ const AdElement = require('../../src/js/directive/grid/adElement.component');
 
 describe('data service', () => {
   let $q, $timeout, $rootScope, dataService, productService;
+  let sandbox;
 
   beforeEach(angular.mock.module('app'));
 
@@ -28,6 +29,12 @@ describe('data service', () => {
       dataService = _dataService_;
       productService = _productService_;
     });
+
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach( () => {
+    sandbox.restore();
   });
 
   describe('getData', () => {
@@ -70,7 +77,7 @@ describe('data service', () => {
 
     it("should call once productService.getProducts", done => {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
-      let stub = sinon.stub(productService, 'getProducts').returns($q.resolve([]));
+      let stub = sandbox.stub(productService, 'getProducts').returns($q.resolve([]));
 
       dataService.getData('size', 10)
         .then( () => {
@@ -83,7 +90,7 @@ describe('data service', () => {
 
     it("should add ads to result", done => {
       jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
-      sinon.stub(productService, 'getProducts').returns($q.resolve(products));
+      sandbox.stub(productService, 'getProducts').returns($q.resolve(products));
 
       dataService.getData('size', 20)
         .then( elements => {
