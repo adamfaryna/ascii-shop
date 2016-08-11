@@ -34,8 +34,8 @@ module.exports = function(config) {
     autoWatch: true,
     singleRun: false,
 
-    // browsers: ['PhantomJS'],
-    browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
+    // browsers: ['Chrome'],
 
     browserify: {
       transform: [

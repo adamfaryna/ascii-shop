@@ -25,7 +25,7 @@ angular.module('app').provider('dataService',
         }
 
         function addAdsInternal(products) {
-          for (let i = adOffset + 1, adId = 0; i <= products.length; i += adOffset + 1, adId++) {
+          for (let i = adOffset, adId = 0; i <= products.length; i += adOffset + 1, adId++) {
             const ad = adService.getAd(lastAddedAdId, adId);
             lastAddedAdId = ad.id;
             products.splice(i, 0, ad);
@@ -35,7 +35,7 @@ angular.module('app').provider('dataService',
         }
 
         function addAds(products) {
-          return $q.resolve(this.addAdsInternal(products));
+          return $q.resolve(addAdsInternal(products));
         }
 
         function getProductsWithAds(sort, limit) {
