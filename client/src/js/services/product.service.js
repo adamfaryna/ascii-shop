@@ -11,9 +11,9 @@ angular.module('app').provider('productService',
     this.$get =
       ['$rootScope', '$log', '$q', '$http', 'serverAddress', 'sortTypes', 'utils',
       ($rootScope, $log, $q, $http, serverAddress, sortTypes, utils) => {
-        const Sort = require('../model/sort.es6');
-        const ProductElement = require('../directive/grid/productElement.component.es6');
-        const ProductsQueryParam = require('../model/productsQueryParam.es6');
+        const Sort = require('../model/sort');
+        const ProductElement = require('../directive/grid/productElement.component');
+        const ProductsQueryParam = require('../model/productsQueryParam');
 
         const cacheByPrice = [];
         const cacheBySize = [];

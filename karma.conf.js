@@ -3,16 +3,15 @@ module.exports = function(config) {
     frameworks: ['browserify', 'jasmine', 'sinon'],
 
     files: [
-      'static/bower_components/jquery/dist/jquery.min.js',
-      'static/bower_components/angular/angular.min.js',
+      'static/bower_components/jquery/dist/jquery.js',
+      'static/bower_components/angular/angular.js',
       'static/bower_components/angular-mocks/angular-mocks.js',
-      'static/bower_components/angular-route/angular-route.min.js',
-      'static/bower_components/lodash/dist/lodash.min.js',
-      'static/bower_components/moment/min/moment.min.js',
+      'static/bower_components/angular-route/angular-route.js',
+      'static/bower_components/lodash/dist/lodash.js',
+      'static/bower_components/moment/moment.js',
       'static/bower_components/react/react.min.js',
-      'client/src/js/**/*.es6',
-      'client/test/**/*.es6'
-      // 'static/js/app.js'
+      'client/src/js/**/*.js',
+      'client/test/**/*.js'
     ],
 
     exclude: [],
@@ -20,8 +19,8 @@ module.exports = function(config) {
     basePath: './',
 
     preprocessors: {
-      'client/src/js/**/*.es6': ['babel', 'browserify'],
-      'client/test/**/*.es6': ['babel', 'browserify']
+      'client/src/js/**/*.js': ['browserify'],
+      'client/test/**/*.js': ['browserify']
     },
 
     reporters: ['progress'],
@@ -35,29 +34,16 @@ module.exports = function(config) {
     autoWatch: true,
     singleRun: false,
 
-    browsers: ['PhantomJS'],
-    // browsers: ['Chrome'],
-    // browsers: ['Chrome', 'PhantomJS'],
+    // browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
 
-    // browserify: {
-    //   transform: [
-    //     ['babelify', {
-    //       presets: ['es2015', 'react']
-    //     }]
-    //   ]
-    // },
-
-    babelPreprocessor: {
-      options: {
-        presets: ['es2015', 'react'],
-        sourceMap: 'inline'
-      },
-      filename: function(file) {
-        return file.originalPath.replace(/\.es6$/, '.es6.js');
-      },
-      sourceFileName: function(file) {
-        return file.originalPath;
-      }
+    browserify: {
+      transform: [
+        ['babelify', {
+          presets: ['es2015', 'react']
+        }]
+      ],
+      debug: true
     },
 
     plugins: [
@@ -66,8 +52,7 @@ module.exports = function(config) {
       'karma-jasmine',
       'karma-browserify',
       'karma-junit-reporter',
-      'karma-sinon',
-      'karma-babel-preprocessor'
+      'karma-sinon'
     ]
   });
 };

@@ -1,7 +1,7 @@
 'use strict';
 
 const moment = require('moment');
-const BasicGridElement = require('./basicGridElement.es6');
+const BasicGridElement = require('./basicGridElement');
 const currencyFilter = angular.injector(['ng']).get('$filter')('currency');
 
 module.exports = class ProductElement extends BasicGridElement {

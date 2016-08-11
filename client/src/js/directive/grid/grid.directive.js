@@ -3,8 +3,8 @@ angular.module('app').directive('dawGrid',
   ($document, $log, $timeout, dataService, partialsPath, $rootScope) => {
     'use strict';
 
-    const Grid = require('./grid.component.es6');
-    const Sort = require('../../model/sort.es6');
+    const Grid = require('./grid.component');
+    const Sort = require('../../model/sort');
 
     const DEFAULT_COLUMNS_NUMBER = 3;
     const DEFAULT_PRODUCTS_DISPLAY_LIMIT = 20;

@@ -1,6 +1,6 @@
 'use strict';
 
-const BasicGridElement = require('./basicGridElement.es6');
+const BasicGridElement = require('./basicGridElement');
 
 module.exports = class Product extends React.Component {
   static get propTypes() {

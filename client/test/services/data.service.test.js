@@ -1,14 +1,14 @@
 'use strict';
 
-describe('productService', () => {
-  let productService;
-  let $rootScope;
+describe('data service', () => {
+  let dataService, $rootScope;
+
+  beforeEach(angular.mock.module('app'));
 
   beforeEach( () => {
-    angular.mock.module('app');
-    angular.mock.inject( (_productService_, _$rootScope_) => {
-      productService = _productService_;
+    angular.mock.inject( (_$rootScope_, _dataService_) => {
       $rootScope = _$rootScope_;
+      dataService = _dataService_;
     });
   });
 
@@ -19,7 +19,7 @@ describe('productService', () => {
         done();
       });
 
-      productService.getData('size', 20);
+      dataService.getData('size', 20);
     });
 
     it("emit 'elementsReady' on 'productsReady' event");

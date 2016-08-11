@@ -1,6 +1,6 @@
 'use strict';
 
-const BasicGridElement = require('./basicGridElement.es6');
+const BasicGridElement = require('./basicGridElement');
 
 module.exports = class AdElement extends BasicGridElement {
   constructor(id, src) {

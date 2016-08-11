@@ -17,7 +17,7 @@ module.exports = function(grunt) {
           ]
         },
         files: {
-          'static/js/app.min.js' : 'client/src/**/*.es6'
+          'static/js/app.min.js' : 'client/src/**/*.js'
         }
       },
       dev: {
@@ -32,7 +32,7 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'static/js/app.js' : 'client/src/**/*.es6'
+          'static/js/app.js' : 'client/src/**/*.js'
         }
       }
     },
@@ -136,7 +136,7 @@ module.exports = function(grunt) {
     },
 
     eslint: {
-      all: ['Gruntfile.js', 'karma.config.js', 'client/**/*.es6']
+      all: ['Gruntfile.js', 'karma.config.js', 'client/**/*.js']
     },
 
     watch: {
@@ -153,7 +153,7 @@ module.exports = function(grunt) {
       },
 
       js: {
-        files: 'client/src/js/**/*.es6',
+        files: 'client/src/js/**/*.js',
         tasks: ['js:dev']
       },
 

@@ -3,7 +3,7 @@ angular.module('app').directive('dawGridControl',
   (partialsPath, sortTypes, sortOrders) => {
     'use strict';
 
-    const Sort = require('../model/sort.es6');
+    const Sort = require('../model/sort');
 
     return {
       restrict: 'EC',

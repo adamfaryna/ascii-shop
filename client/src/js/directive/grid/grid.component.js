@@ -1,6 +1,6 @@
 'use strict';
 
-const GridElement = require('./gridElement.component.es6');
+const GridElement = require('./gridElement.component');
 
 module.exports = class DawProductGrid extends React.Component {
 
