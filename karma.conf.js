@@ -3,11 +3,11 @@ module.exports = function(config) {
     frameworks: ['browserify', 'jasmine', 'sinon'],
 
     files: [
+      'static/bower_components/lodash/dist/lodash.min.js',
       'static/bower_components/jquery/dist/jquery.js',
       'static/bower_components/angular/angular.js',
       'static/bower_components/angular-mocks/angular-mocks.js',
       'static/bower_components/angular-route/angular-route.js',
-      'static/bower_components/lodash/dist/lodash.js',
       'static/bower_components/moment/moment.js',
       'static/bower_components/react/react.min.js',
       'client/src/js/**/*.js',
