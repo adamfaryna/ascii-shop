@@ -5,4 +5,8 @@ angular.module('app')
   .constant('sortOrders', [ 'ascending', 'descending' ])
   .constant('defaultProductFetchLimit', 20)
   .constant('defaultAdsLimit', 16)
-  .constant('defaultAdOffset', 20);
+  .constant('defaultAdOffset', 20)
+  .constant('defaultGridDefaultColumnNum', 3)
+  .constant('defaultGridElementsDisplayLimit', 20)
+  .constant('defaultGridSortType', 'id')
+  .constant('defaultGridShowControls', true);

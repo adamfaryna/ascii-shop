@@ -13,11 +13,7 @@ describe('data service', () => {
 
   beforeEach(angular.mock.module('app', $provide => {
     $provide.service('productService', function () {
-      return {
-        getProducts() {
-          return [];
-        }
-      };
+      return { getProducts() { return []; } };
     });
   }));
 
