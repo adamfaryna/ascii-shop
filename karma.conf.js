@@ -11,7 +11,8 @@ module.exports = function(config) {
       'static/bower_components/moment/moment.js',
       'static/bower_components/react/react.min.js',
       'client/src/js/**/*.js',
-      'client/test/**/*.js'
+      'client/test/**/*.js',
+      'client/src/partials/**/'
     ],
 
     exclude: [],
@@ -20,7 +21,8 @@ module.exports = function(config) {
 
     preprocessors: {
       'client/src/js/**/*.js': ['browserify'],
-      'client/test/**/*.js': ['browserify']
+      'client/test/**/*.js': ['browserify'],
+      'client/src/partials/**/': ['html2js']
     },
 
     reporters: ['progress'],
@@ -52,7 +54,8 @@ module.exports = function(config) {
       'karma-jasmine',
       'karma-browserify',
       'karma-junit-reporter',
-      'karma-sinon'
+      'karma-sinon',
+      'karma-html2js'
     ]
   });
 };
