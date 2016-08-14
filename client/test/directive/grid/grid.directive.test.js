@@ -17,9 +17,6 @@ describe('grid directive', () => {
   const templateUrl = 'partials/directive/grid.html';
 
   let dataServiceStub;
-   // = function () {
-  //   this.getData = () => { return {}; }};
-  // };
 
   beforeEach( () => {
     sandbox = sinon.sandbox.create();

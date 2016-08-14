@@ -50,6 +50,7 @@
     "karma-sinon": "^1.0.5",
     "karma-spec-reporter": "0.0.26",
     "phantomjs-prebuilt": "^2.1.7",
+    "react-addons-test-utils": "^15.3.0",
     "reactify": "^1.1.1",
     "sinon": "^1.17.5",
     "uglifyify": "^3.0.1"
