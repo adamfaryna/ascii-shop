@@ -54,23 +54,6 @@ angular.module('app').directive('dawLoadingBar',
             scope.hideProgressBar();
           }
         });
-
-        //   }, 250, MAX_NUMBER_OF_DOTS);
-        // };
-
-        // scope.prepareShowProgressBar = () => {
-        //   if (scope.showMoreProductsPromise) {
-        //     $timeout.cancel(scope.showMoreProductsPromise);
-        //   }
-
-        //   scope.showMoreProductsPromise = $timeout(scope.showMoreProducts, 150);
-        // };
-
-        // gridCtrl.$watch('isShowProgressBar', newVal => {
-        //   if (newVal) {
-        //     // scope.prepareShowProgressBar();
-        //   }
-        // });
       }
     };
   }
