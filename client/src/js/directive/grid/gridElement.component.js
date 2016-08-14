@@ -2,7 +2,7 @@
 
 const BasicGridElement = require('./basicGridElement');
 
-module.exports = class Product extends React.Component {
+module.exports = class GridElement extends React.Component {
   static get propTypes() {
     return {
       element: React.PropTypes.instanceOf(BasicGridElement).isRequired

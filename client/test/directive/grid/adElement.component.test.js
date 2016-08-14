@@ -3,7 +3,7 @@
 const AdElement = require('../../../src/js/directive/grid/adElement.component');
 const ReactTestUtils = require('react-addons-test-utils');
 
-describe('ad elemenent component', () => {
+describe('ad element component', () => {
   const adElementTemplate = new AdElement(1, 'www.abc.com?r=1');
   let adElement;
 
