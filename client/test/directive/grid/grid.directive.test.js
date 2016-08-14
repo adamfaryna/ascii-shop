@@ -2,38 +2,44 @@
 
 const sinon = require('sinon');
 const moment = require('moment');
-const AdElement = require('../../src/js/directive/grid/adElement.component');
-const ProductElement = require('../../src/js/directive/grid/productElement.component');
+const AdElement = require('../../../src/js/directive/grid/adElement.component');
+const ProductElement = require('../../../src/js/directive/grid/productElement.component');
 
 describe('grid directive', () => {
   let sandbox;
   let $rootScope, $compile, $q;
   let scope, element;
-  let template;
+  // let template;
   let elements = [];
 
   let defaultGridDefaultColumnNum, defaultGridProductDisplayLimit,
     defaultGridSortType, defaultGridShowControls, dataService;
+
+  const templateUrl = 'partials/directive/grid.html';
+
+  let dataServiceStub;
 
   beforeEach( () => {
     sandbox = sinon.sandbox.create();
     let adsAdded = 0;
 
     for (let i = 0; i !== 100; i++) {
-      elements.put(new ProductElement(i + 1, i * 10, i * 15, i * 20, moment()));
+      elements.push(new ProductElement(i + 1, i * 10, i * 15, i * 20, moment()));
 
       if (i !== 0 && i % (20 + adsAdded) === 0) {
-        elements.put(new AdElement(1, 'www.abc.com'));
+        elements.push(new AdElement(1, 'www.abc.com'));
         adsAdded++;
       }
     }
   });
 
-  beforeEach(angular.mock.module('app', $provide => {
+  beforeEach(angular.mock.module('app', 'templates', $provide => {
     $provide.service('dataService', function() {
       return { getData() { return elements; } };
     });
   }));
+
+  // beforeEach(angular.mock.module('partials/directive/grid.html'));
 
   beforeEach(angular.mock.inject( (_$q_, $templateCache, partialsPath, _$rootScope_, _$compile_, _defaultGridDefaultColumnNum_, _defaultGridProductDisplayLimit_,
     _defaultGridSortType_, _defaultGridShowControls_, _dataService_) => {
@@ -47,25 +53,28 @@ describe('grid directive', () => {
     dataService = _dataService_;
     scope = $rootScope.$new();
 
-    const templatePath = `client/src/${partialsPath}/grid.html`;
-    template = $templateCache.get(templatePath);
-    $templateCache.put(templatePath, template);
+    dataServiceStub = sandbox.stub(dataService, 'getData').returns($q.resolve([]));
+
+    const template = $templateCache.get(templateUrl);
+    $templateCache.put(templateUrl, template);
   }));
 
   afterEach( () => {
     sandbox.restore();
   })
 
-  function testAfterElementsReadyEventBehaviour(scope, done) {
-    $rootScope.$emit('elementsReady', elements);
+  function testAfterElementsReadyEventBehaviour(scope) {
+    return done => {
+      $rootScope.$emit('elementsReady', elements);
 
-    setTimeout( () => {
-      expect($('.element.product', element).length).toBe(100);
-      expect($('.element.ad', element).length).toBe(5);
-      expect(scope.showProgressBar).toBe(false);
-      expect(scope.data.elements).toBe(elements);
-      done();
-    }, 100);
+      setTimeout( () => {
+        expect($('.element.product', element).length).toBe(100);
+        expect($('.element.ad', element).length).toBe(5);
+        expect(scope.showProgressBar).toBe(false);
+        expect(scope.data.elements).toBe(elements);
+        done();
+      }, 100);
+    };
   }
 
   function testSortChangeMethod() {
@@ -85,9 +94,8 @@ describe('grid directive', () => {
   }
 
   function testGetDataMethodGetsDataFromService() {
-    const stub = sandbox.stub(dataService, 'getData').returns($q.resolve([]));
     scope.getData();
-    expect(stub.calledOnce).toBeTruthy();
+    expect(dataServiceStub.calledOnce).toBeTruthy();
   }
 
   describe('with all attributes set', () => {
@@ -98,13 +106,13 @@ describe('grid directive', () => {
     const columns = 5;
 
     beforeEach( () => {
-      element = `<daw-grid limit="${limit} show-controls="${showControls}" sort-type="${sortType}" sort-order="${sortOrder}" columns="${columns}"></daw-grid>`;
+      const elementTemplate = angular.element(`<daw-grid limit="${limit}" show-controls="${showControls}" sort-type="${sortType}" sort-order="${sortOrder}" columns="${columns}"></daw-grid>`);
 
-      element = $compile(element)(scope);
-      scope.$digest();
+      element = $compile(elementTemplate)(scope);
+      scope.$apply();
     });
 
-    it('should set properly all parameters', () => {
+    fit('should set properly all parameters', () => {
       const isolated = element.isolateScope();
       expect(isolated.limit).toBe(limit);
       expect(isolated.columns).toBe(columns);
@@ -113,7 +121,7 @@ describe('grid directive', () => {
       expect(isolated.sortOrder).toBe(sortOrder);
     });
 
-    it("should listen on 'elementsReady' event and generate child elements from event data",testAfterElementsReadyEventBehaviour);
+    it("should listen on 'elementsReady' event and generate child elements from event data",testAfterElementsReadyEventBehaviour(scope));
 
     describe('has sortChange method', () => {
       it("should change sort order", testSortChangeMethod);
@@ -127,9 +135,9 @@ describe('grid directive', () => {
 
   describe('with no attributes set', () => {
     beforeEach( () => {
-      element = `<daw-grid></daw-grid>`;
+      const elementTemplate = angular.element('<daw-grid></daw-grid>');
 
-      element = $compile(element)(scope);
+      element = $compile(elementTemplate)(scope);
       scope.$digest();
     });
 
@@ -142,7 +150,7 @@ describe('grid directive', () => {
       expect(isolated.sortOrder).toBe(undefined);
     });
 
-    it("should listen on 'elementsReady' event and generate child elements from event data",testAfterElementsReadyEventBehaviour);
+    it("should listen on 'elementsReady' event and generate child elements from event data",testAfterElementsReadyEventBehaviour(scope));
 
     describe('has sortChange method', () => {
       it("should change sort order", testSortChangeMethod);

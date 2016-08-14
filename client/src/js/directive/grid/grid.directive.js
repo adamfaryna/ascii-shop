@@ -1,15 +1,11 @@
 angular.module('app').directive('dawGrid',
-  ['$document', '$log', '$timeout', 'dataService', 'partialsPath', '$rootScope', 'defaultGridDefaultColumnNum', 'defaultGridElementsDisplayLimit', 'defaultGridSortType', 'defaultGridShowControls',
-  ($document, $log, $timeout, dataService, partialsPath, $rootScope, defaultGridDefaultColumnNum, defaultGridElementsDisplayLimit, defaultGridSortType, defaultGridShowControls) => {
+  ['$document', '$log', '$timeout', 'dataService', 'partialsPath', '$rootScope', 'defaultGridDefaultColumnNum', 'defaultGridProductDisplayLimit', 'defaultGridSortType', 'defaultGridShowControls',
+  ($document, $log, $timeout, dataService, partialsPath, $rootScope, DEFAULT_COLUMNS_NUMBER,
+    DEFAULT_ELEMENTS_DISPLAY_LIMIT, DEFAULT_SORT_TYPE, DEFAULT_SHOW_CONTROLS) => {
     'use strict';
 
     const Grid = require('./grid.component');
     const Sort = require('../../model/sort');
-
-    const DEFAULT_COLUMNS_NUMBER = defaultGridDefaultColumnNum;
-    const DEFAULT_ELEMENTS_DISPLAY_LIMIT = defaultGridElementsDisplayLimit;
-    const DEFAULT_SORT_TYPE = defaultGridSortType;
-    const DEFAULT_SHOW_CONTROLS = defaultGridShowControls;
 
     return {
       restrict: 'E',
@@ -22,15 +18,6 @@ angular.module('app').directive('dawGrid',
       },
       templateUrl: `${partialsPath}/grid.html`,
       controller: ['$scope', function($scope) {
-        $scope.limit = $scope.limit ? parseInt($scope.limit) : DEFAULT_ELEMENTS_DISPLAY_LIMIT;
-        $scope.columns = $scope.columns ? parseInt($scope.columns) : DEFAULT_COLUMNS_NUMBER;
-        $scope.showControls = $scope.showControls ? $scope.showControls === 'true' : DEFAULT_SHOW_CONTROLS;
-        $scope.sortType = $scope.sortType || DEFAULT_SORT_TYPE;
-
-        $scope.showProgressBar = false;
-        $scope.data = { elements: [] };
-        $scope.noMoreData = false;
-
         $scope.elementsReadyListener = $rootScope.$on('elementsReady', (event, elements) => {
           if (elements) {
             $scope.noMoreData = elements.length !== 0 && elements.length === $scope.data.elements.length;
@@ -51,8 +38,29 @@ angular.module('app').directive('dawGrid',
           $scope.getData(sort);
         }
       }],
-      link(scope, elm) {
+      link(scope, elm, attrs) {
+        scope.sortType = scope.sortType || DEFAULT_SORT_TYPE;
+        scope.limit = scope.limit || DEFAULT_ELEMENTS_DISPLAY_LIMIT;
+        scope.columns = scope.columns || DEFAULT_COLUMNS_NUMBER;
+        scope.showControls = scope.showControls || DEFAULT_SHOW_CONTROLS;
+
+        scope.showProgressBar = false;
+        scope.data = { elements: [] };
+        scope.noMoreData = false;
+
         const elementsContainer = $('.daw-elements', elm)[0];
+
+        attrs.$observe('limit', limit => {
+          scope.limit = limit ? parseInt(limit) : DEFAULT_ELEMENTS_DISPLAY_LIMIT;
+        });
+
+        attrs.$observe('columns', columns => {
+          scope.columns = columns ? parseInt(columns) : DEFAULT_COLUMNS_NUMBER;
+        });
+
+        attrs.$observe('showControls', showControls => {
+          scope.showControls = showControls ? showControls === 'true' : DEFAULT_SHOW_CONTROLS;
+        });
 
         scope.$on('$destroy', () => {
           ReactDOM.unmountComponentAtNode(elementsContainer);
@@ -60,11 +68,11 @@ angular.module('app').directive('dawGrid',
         });
 
         scope.$watchCollection('data.elements', elements => {
-          ReactDOM.render(<Grid elements={elements} />, elementsContainer);
+          ReactDOM.render(<Grid elements={elements} columns={scope.columns}/>, elementsContainer);
         });
 
         $document.on('scroll', elm, () => {
-          if (isScrolledToEnd(elm)) {
+          if (isScrolledToEnd(elm) && !scope.noMoreData) {
             scope.prepareShowMoreElements();
           }
         });

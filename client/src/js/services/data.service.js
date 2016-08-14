@@ -35,7 +35,8 @@ angular.module('app').provider('dataService',
         }
 
         function addAds(products) {
-          return $q.resolve(addAdsInternal(products));
+          const result = addAdsInternal(products);
+          return $q.resolve(result);
         }
 
         function getProductsWithAds(sort, limit) {

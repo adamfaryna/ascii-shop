@@ -7,6 +7,6 @@ angular.module('app')
   .constant('defaultAdsLimit', 16)
   .constant('defaultAdOffset', 20)
   .constant('defaultGridDefaultColumnNum', 3)
-  .constant('defaultGridElementsDisplayLimit', 20)
+  .constant('defaultGridProductDisplayLimit', 20)
   .constant('defaultGridSortType', 'id')
   .constant('defaultGridShowControls', true);

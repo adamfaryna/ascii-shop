@@ -5,6 +5,8 @@ module.exports = function(config) {
     files: [
       'static/bower_components/lodash/dist/lodash.min.js',
       'static/bower_components/jquery/dist/jquery.js',
+      'static/bower_components/react/react.min.js',
+      'static/bower_components/react/react-dom.min.js',
       'static/bower_components/angular/angular.js',
       'static/bower_components/angular-mocks/angular-mocks.js',
       'static/bower_components/angular-route/angular-route.js',
@@ -12,7 +14,7 @@ module.exports = function(config) {
       'static/bower_components/react/react.min.js',
       'client/src/js/**/*.js',
       'client/test/**/*.js',
-      'client/src/partials/**/'
+      'client/src/partials/**/*.html'
     ],
 
     exclude: [],
@@ -22,7 +24,7 @@ module.exports = function(config) {
     preprocessors: {
       'client/src/js/**/*.js': ['browserify'],
       'client/test/**/*.js': ['browserify'],
-      'client/src/partials/**/': ['html2js']
+      '**/*.html': ['ng-html2js']
     },
 
     reporters: ['progress'],
@@ -48,6 +50,11 @@ module.exports = function(config) {
       debug: true
     },
 
+    ngHtml2JsPreprocessor: {
+      stripPrefix: 'client/src/',
+      moduleName: 'templates'
+    },
+
     plugins: [
       'karma-phantomjs-launcher',
       'karma-chrome-launcher',
@@ -55,7 +62,7 @@ module.exports = function(config) {
       'karma-browserify',
       'karma-junit-reporter',
       'karma-sinon',
-      'karma-html2js'
+      'karma-ng-html2js-preprocessor'
     ]
   });
 };

@@ -6,12 +6,13 @@ module.exports = class DawProductGrid extends React.Component {
 
   static get propTypes() {
     return {
-      elements: React.PropTypes.instanceOf(Array).isRequired
+      elements: React.PropTypes.instanceOf(Array).isRequired,
+      columns: React.PropTypes.number.isRequired
     };
   }
 
   shouldCreateNewRow(index) {
-    return index % 3 === 0;
+    return index % this.props.columns === 0;
   }
 
   createRow(elems) {
@@ -23,10 +24,10 @@ module.exports = class DawProductGrid extends React.Component {
       const rows = [];
       let elems = [];
 
-      this.props.elements.forEach( (product, index) => {
-        elems.push(<GridElement element={product}/>);
+      this.props.elements.forEach( (element, index) => {
+        elems.push(<GridElement element={element}/>);
 
-        if (this.shouldCreateNewRow(index)) {
+        if (this.shouldCreateNewRow(index + 1)) {
           rows.push(this.createRow(elems));
           elems = [];
         }
@@ -37,7 +38,7 @@ module.exports = class DawProductGrid extends React.Component {
       }
 
       return (
-        React.createElement('div', ...rows)
+        React.createElement('div', {}, ...rows)
       );
 
     } else {
