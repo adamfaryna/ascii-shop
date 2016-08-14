@@ -7,9 +7,8 @@ const ProductElement = require('../../../src/js/directive/grid/productElement.co
 
 describe('grid directive', () => {
   let sandbox;
-  let $rootScope, $compile, $q;
+  let $rootScope, $compile, $q, $timeout;
   let scope, element;
-  // let template;
   let elements = [];
 
   let defaultGridDefaultColumnNum, defaultGridProductDisplayLimit,
@@ -18,6 +17,9 @@ describe('grid directive', () => {
   const templateUrl = 'partials/directive/grid.html';
 
   let dataServiceStub;
+   // = function () {
+  //   this.getData = () => { return {}; }};
+  // };
 
   beforeEach( () => {
     sandbox = sinon.sandbox.create();
@@ -26,24 +28,23 @@ describe('grid directive', () => {
     for (let i = 0; i !== 100; i++) {
       elements.push(new ProductElement(i + 1, i * 10, i * 15, i * 20, moment()));
 
-      if (i !== 0 && i % (20 + adsAdded) === 0) {
-        elements.push(new AdElement(1, 'www.abc.com'));
+      if ((elements.length - adsAdded) % 20 === 0) {
+        elements.push(new AdElement(i, 'www.abc.com'));
         adsAdded++;
       }
     }
   });
 
   beforeEach(angular.mock.module('app', 'templates', $provide => {
-    $provide.service('dataService', function() {
-      return { getData() { return elements; } };
-    });
+    $provide.service('dataService', function () {
+      this.getData = () => {};
+    })
   }));
 
-  // beforeEach(angular.mock.module('partials/directive/grid.html'));
-
-  beforeEach(angular.mock.inject( (_$q_, $templateCache, partialsPath, _$rootScope_, _$compile_, _defaultGridDefaultColumnNum_, _defaultGridProductDisplayLimit_,
+  beforeEach(angular.mock.inject( (_$q_, _$timeout_, $templateCache, partialsPath, _$rootScope_, _$compile_, _defaultGridDefaultColumnNum_, _defaultGridProductDisplayLimit_,
     _defaultGridSortType_, _defaultGridShowControls_, _dataService_) => {
     $q = _$q_;
+    $timeout = _$timeout_;
     $rootScope = _$rootScope_;
     $compile = _$compile_;
     defaultGridDefaultColumnNum = _defaultGridDefaultColumnNum_;
@@ -53,7 +54,7 @@ describe('grid directive', () => {
     dataService = _dataService_;
     scope = $rootScope.$new();
 
-    dataServiceStub = sandbox.stub(dataService, 'getData').returns($q.resolve([]));
+    dataServiceStub = sandbox.stub(dataService, 'getData').returns($q.resolve(elements));
 
     const template = $templateCache.get(templateUrl);
     $templateCache.put(templateUrl, template);
@@ -61,41 +62,47 @@ describe('grid directive', () => {
 
   afterEach( () => {
     sandbox.restore();
+    elements = [];
   })
 
-  function testAfterElementsReadyEventBehaviour(scope) {
-    return done => {
-      $rootScope.$emit('elementsReady', elements);
+  function testAfterElementsReadyEventBehaviour(done) {
+    $rootScope.$emit('elementsReady', elements);
+    const isolated = element.isolateScope();
+    isolated.getData();
 
-      setTimeout( () => {
-        expect($('.element.product', element).length).toBe(100);
-        expect($('.element.ad', element).length).toBe(5);
-        expect(scope.showProgressBar).toBe(false);
-        expect(scope.data.elements).toBe(elements);
-        done();
-      }, 100);
+    setTimeout( () => {
+      expect($('.element.product', element).length).toBe(100);
+      expect($('.element.ad', element).length).toBe(5);
+      expect(isolated.data.elements).toBe(elements);
+      done();
+    }, 100);
+
+    $timeout.flush();
+  }
+
+  function testSortChangeMethod(element) {
+    return () => {
+      const ctrl = element.data('$dawGridController');
+      const isolated = elements.isolateScope();
+      ctrl.sortChange('price');
+      const gridElements = isolated.data.elements;
+
+      gridElements.forEach( (elem, index) => {
+        if (index !== 0) {
+          expect(elem.price).toBeLessThan(gridElements[index].price);
+        }
+      });
     };
   }
 
-  function testSortChangeMethod() {
-    scope.sortChange('price');
-    const gridElements = scope.data.elements;
-
-    gridElements.forEach( (elem, index) => {
-      if (index !== 0) {
-        expect(elem.price).toLt(gridElements[index].price);
-      }
-    });
-  }
-
   function testGetDataMethodShowProgressBar() {
-    scope.getData();
+    element.isolateScope().getData();
     expect(scope.showProgressBar).toBeTruthy;
   }
 
   function testGetDataMethodGetsDataFromService() {
-    scope.getData();
-    expect(dataServiceStub.calledOnce).toBeTruthy();
+    element.isolateScope().getData();
+    expect(dataServiceStub.calledTwice).toBeTruthy();
   }
 
   describe('with all attributes set', () => {
@@ -112,7 +119,7 @@ describe('grid directive', () => {
       scope.$apply();
     });
 
-    fit('should set properly all parameters', () => {
+    it('should set properly all parameters', () => {
       const isolated = element.isolateScope();
       expect(isolated.limit).toBe(limit);
       expect(isolated.columns).toBe(columns);
@@ -121,10 +128,11 @@ describe('grid directive', () => {
       expect(isolated.sortOrder).toBe(sortOrder);
     });
 
-    it("should listen on 'elementsReady' event and generate child elements from event data",testAfterElementsReadyEventBehaviour(scope));
+    it("should listen on 'elementsReady' event and generate child elements from event data",
+      done => testAfterElementsReadyEventBehaviour(done));
 
     describe('has sortChange method', () => {
-      it("should change sort order", testSortChangeMethod);
+      it("should change sort order", () => testSortChangeMethod(element));
     });
 
     describe('has getData method', () => {
@@ -150,10 +158,11 @@ describe('grid directive', () => {
       expect(isolated.sortOrder).toBe(undefined);
     });
 
-    it("should listen on 'elementsReady' event and generate child elements from event data",testAfterElementsReadyEventBehaviour(scope));
+    it("should listen on 'elementsReady' event and generate child elements from event data",
+      done => testAfterElementsReadyEventBehaviour(done));
 
     describe('has sortChange method', () => {
-      it("should change sort order", testSortChangeMethod);
+      it("should change sort order", () => testSortChangeMethod(element));
     });
 
     describe('has getData method', () => {
