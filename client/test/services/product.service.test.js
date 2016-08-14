@@ -1,7 +1,6 @@
 'use strict';
 
 const sinon = require('sinon');
-const moment = require('moment');
 const Sort = require('../../src/js/model/sort');
 
 describe('productService', () => {

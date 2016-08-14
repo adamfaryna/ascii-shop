@@ -2,7 +2,6 @@
 
 const ProductElement = require('../../../src/js/directive/grid/productElement.component');
 const ReactTestUtils = require('react-addons-test-utils');
-const moment = require('moment');
 
 describe('product element component', () => {
   const productElementTemplate = new ProductElement(2, 10, 100, 200, moment());

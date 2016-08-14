@@ -23,7 +23,8 @@
     "React": true,
     "ReactDOM": true,
     "_": true,
-    "inject": true
+    "inject": true,
+    "moment": true
   },
   "plugins": [ "react" ],
   "rules": {

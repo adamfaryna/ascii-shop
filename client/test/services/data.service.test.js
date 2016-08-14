@@ -1,7 +1,6 @@
 'use strict';
 
 const sinon = require('sinon');
-const moment = require('moment');
 const ProductElement = require('../../src/js/directive/grid/productElement.component');
 const AdElement = require('../../src/js/directive/grid/adElement.component');
 
