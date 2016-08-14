@@ -63,9 +63,16 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'static/index.html': [
-            'static/js/external.min.*.js',
-            'static/js/app.min.*.js',
-            'static/css/*.min.*.css'
+            'static/css/style.min.css',
+            'static/bower_components/moment/min/moment.min.js',
+            'static/bower_components/jquery/dist/jquery.min.js',
+            'static/bower_components/angular/angular.min.js',
+            'static/bower_components/angular-route/angular-route.min.js',
+            'static/bower_components/react/react.min.js',
+            'static/bower_components/react/react-dom.min.js',
+            'static/bower_components/lodash/dist/lodash.min.js',
+            'static/bower_components/babel-polyfill/browser-polyfill.js',
+            'static/js/app.min.*.js'
           ]
         }
       },
