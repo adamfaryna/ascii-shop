@@ -38,6 +38,7 @@
     "grunt-injector": "^1.0.0",
     "grunt-karma": "^1.0.0",
     "grunt-nodemon": "^0.4.2",
+    "grunt-strip-code": "^1.0.4",
     "grunt-wiredep": "^3.0.1",
     "jasmine-core": "^2.3.4",
     "jit-grunt": "^0.10.0",

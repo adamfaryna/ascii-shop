@@ -96,7 +96,7 @@ angular.module('app').provider('productService',
 
         function prepareQueryParams(queryParams) {
           const limitParam = queryParams.limit ? `limit=${queryParams.limit}` : '';
-          const sortParam = queryParams.sort.sortType ? `sort=${queryParams.sort.sortType}` : '';
+          const sortParam = _.get(queryParams, 'sort.sortType') ? `sort=${queryParams.sort.sortType}` : '';
           const skipParam = queryParams.skip ? `skip=${queryParams.skip}` : '';
           let queryString = '';
 

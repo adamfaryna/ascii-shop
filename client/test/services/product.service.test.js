@@ -2,6 +2,7 @@
 
 const sinon = require('sinon');
 const Sort = require('../../src/js/model/sort');
+const ProductsQueryParam = require('../../src/js/model/productsQueryParam');
 
 describe('productService', () => {
   let $rootScope, $q, $timeout, $http, productService;
@@ -32,6 +33,33 @@ describe('productService', () => {
 
   afterEach( () => {
     sandbox.restore();
+  });
+
+  fdescribe('prepareQueryParams', () => {
+    it('should generate proper query param string for limit parameter only', () => {
+      const queryParam = new ProductsQueryParam(15);
+      expect(productService.prepareQueryParams(queryParam)).toBe('?limit=15');
+    });
+
+    it('should generate proper query param string for sortType parameter only', () => {
+      const queryParam = new ProductsQueryParam(undefined, { sortType: 'size' });
+      expect(productService.prepareQueryParams(queryParam)).toBe('?sort=size');
+    });
+
+    it('should generate proper query param string for skip parameter only', () => {
+      const queryParam = new ProductsQueryParam(undefined, undefined, 10);
+      expect(productService.prepareQueryParams(queryParam)).toBe('?skip=10');
+    });
+
+    it('should generate proper query param string for all parameters passed', () => {
+      const queryParam = new ProductsQueryParam(15, { sortType: 'price', sortOrder: 'ascending' }, 10);
+      const result = productService.prepareQueryParams(queryParam);
+      const exampleExpectedResult = '?skip=10&limit=15&sort=price';
+      expect(result.length).toBe(exampleExpectedResult.length);
+      expect(result.indexOf('skip=10')).not.toBe(-1);
+      expect(result.indexOf('limit=15')).not.toBe(-1);
+      expect(result.indexOf('sort=price')).not.toBe(-1);
+    });
   });
 
   describe('getProducts', () => {
