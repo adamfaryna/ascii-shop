@@ -9,7 +9,7 @@ module.exports = class ProductElement extends BasicGridElement {
     this.size = obj.size;
     this.price = currencyFilter(obj.price);
     this.face = obj.face;
-    this.date = moment(obj.date).fromNow();
+    this.date = moment(obj.date, 'ddd MMMM MM YYYY hh:mm:ss').fromNow();
   }
 
   render() {
