@@ -28,14 +28,17 @@ angular.module('app').directive('dawGrid',
 
         $scope.getData = (sort, limit = DEFAULT_ELEMENTS_DISPLAY_LIMIT) => {
           $scope.showProgressBar = true;
+          $scope.fechingData = true;
+
           dataService.getData(sort, limit)
             .then( elements => {
               $scope.data.elements = elements;
+              $scope.fechingData = false;
             }, $log.error);
         };
 
         this.sortChange = sort => {
-          $scope.getData(sort);
+          $scope.getData(sort, $scope.limit);
         }
       }],
       link(scope, elm, attrs) {
@@ -47,6 +50,7 @@ angular.module('app').directive('dawGrid',
         scope.showProgressBar = false;
         scope.data = { elements: [] };
         scope.noMoreData = false;
+        scope.fechingData = false;
 
         const elementsContainer = $('.daw-elements', elm)[0];
 
@@ -72,16 +76,14 @@ angular.module('app').directive('dawGrid',
         });
 
         $document.on('scroll', elm, () => {
-          if (isScrolledToEnd(elm) && !scope.noMoreData) {
+          if (isScrolledToEnd(elm) && !scope.noMoreData && !scope.fechingData) {
             scope.prepareShowMoreElements();
           }
         });
 
         scope.showMoreElements = () => {
-          const elementsNumToFetch =
-            scope.data.elements.length ? scope.data.elements.length + scope.limit : scope.limit;
           const sort = new Sort(scope.sortType, scope.sortOrder);
-          scope.getData(sort, elementsNumToFetch);
+          scope.getData(sort, scope.limit);
         };
 
         scope.prepareShowMoreElements = () => {
@@ -89,8 +91,11 @@ angular.module('app').directive('dawGrid',
             $timeout.cancel(scope.showMoreElementsPromise);
           }
 
-          scope.showMoreElementsPromise = $timeout(scope.showMoreElements, 150);
+          scope.showMoreElementsPromise = $timeout(scope.showMoreElements, 350);
         };
+
+        // initial fetch
+        scope.prepareShowMoreElements();
 
         function isScrolledToEnd(elm) {
           return -(elm[0].getBoundingClientRect().top) > $($document).height() / 4;

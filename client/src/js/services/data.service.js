@@ -59,6 +59,12 @@ angular.module('app').provider('dataService',
         }
 
         return {
+          /* test-code */
+          getProductsWithAds,
+          addAds,
+          addAdsInternal,
+          processGetProductsWithAds,
+          /* end-test-code */
           getData
         };
       }];

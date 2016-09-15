@@ -134,6 +134,12 @@ module.exports = function(grunt) {
       }
     },
 
+    strip_code: {
+      all: {
+        src: 'static/js/**/*.js'
+      }
+    },
+
     karma: {
       unit: {
         configFile: './karma.conf.js',
@@ -196,8 +202,10 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('default', ['dev']);
-  grunt.registerTask('dev', ['clean', 'css:dev', 'js:dev', 'inject:dev', 'concurrent']);
-  grunt.registerTask('dist', ['clean', 'css:dist', 'js:dist', 'filerev:dist', 'inject:dist']);
+  grunt.registerTask('dev', ['build:dev', 'strip_code', 'concurrent']);
+  grunt.registerTask('dist', ['build:dist', 'strip_code']);
+  grunt.registerTask('build:dev', ['clean', 'css:dev', 'js:dev', 'inject:dev']);
+  grunt.registerTask('build:dist', ['clean', 'css:dist', 'js:dist', 'filerev:dist', 'inject:dist']);
   grunt.registerTask('js:dev', ['browserify:dev']);
   grunt.registerTask('js:dist', ['browserify:dist']);
   grunt.registerTask('inject:dev', ['copy', 'wiredep', 'injector:dev']);
@@ -206,6 +214,6 @@ module.exports = function(grunt) {
   grunt.registerTask('css:dist', ['less:dist', 'autoprefixer:dist']);
 
   // testing
-  grunt.registerTask('test', ['lint', 'karma:unit']);
+  grunt.registerTask('test', ['build:dev', 'lint', 'karma:unit']);
   grunt.registerTask('lint', ['eslint']);
 };

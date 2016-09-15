@@ -29,6 +29,9 @@ angular.module('app').factory('adService',
     }
 
     return {
+      /* test-code */
+      randomDifferentAdId,
+      /* end-test-code */
       getAd
     };
   }]

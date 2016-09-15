@@ -46,10 +46,9 @@ angular.module('app').provider('productService',
 
         function fetchProductsInternal(sort, limit = fetchLimit) {
           const cache = getCache(sort);
-          const queryParams = new ProductsQueryParam(limit, sort, cache.length);
 
           fetchPromise = fetchPromise
-          .then( () => pullProducts(queryParams))
+          .then( () => pullProducts(sort, limit))
           .then( res => {
             if (res && res.data && res.data.length !== 0) {
               noMoreData = false;
@@ -97,7 +96,7 @@ angular.module('app').provider('productService',
 
         function prepareQueryParams(queryParams) {
           const limitParam = queryParams.limit ? `limit=${queryParams.limit}` : '';
-          const sortParam = queryParams.sort ? `sort=${queryParams.sort}` : '';
+          const sortParam = queryParams.sort.sortType ? `sort=${queryParams.sort.sortType}` : '';
           const skipParam = queryParams.skip ? `skip=${queryParams.skip}` : '';
           let queryString = '';
 
@@ -105,7 +104,8 @@ angular.module('app').provider('productService',
             queryString += elem ? `&${elem}` : '';
           });
 
-          return queryString.slice(1);
+          // remove ampersand from the beginning and add question mark
+          return queryString.length === 0 ? '' : '?' + queryString.slice(1);
         }
 
         function newLineJSONTransform(response) {
@@ -119,9 +119,10 @@ angular.module('app').provider('productService',
           }
         }
 
-        function pullProducts(queryParams) {
+        function pullProducts(sort, limit) {
+          const queryParams = new ProductsQueryParam(limit, sort, getCache(sort).length);
           const queryString = prepareQueryParams(queryParams);
-          return $http.get(`${serverAddress}/api${queryString}`, {
+          return $http.get(`${serverAddress}/api/products${queryString}`, {
             transformResponse: newLineJSONTransform
           }).catch($log.error);
         }
@@ -137,6 +138,16 @@ angular.module('app').provider('productService',
         }
 
         return {
+          /* test-code */
+          pullProducts,
+          newLineJSONTransform,
+          prepareQueryParams,
+          getCache,
+          sortCache,
+          fetchProductsInternal,
+          fetchProducts,
+          prefetchData,
+          /* end-test-code */
           getProducts
         };
       }];

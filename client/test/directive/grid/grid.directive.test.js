@@ -98,7 +98,7 @@ describe('grid directive', () => {
 
   function testGetDataMethodGetsDataFromService() {
     element.isolateScope().getData();
-    expect(dataServiceStub.calledTwice).toBeTruthy();
+    expect(dataServiceStub.calledOnce).toBeTruthy();
   }
 
   describe('with all attributes set', () => {
@@ -131,9 +131,10 @@ describe('grid directive', () => {
       it("should change sort order", () => testSortChangeMethod(element));
     });
 
+// aaa
     describe('has getData method', () => {
       it("should show progressbar", testGetDataMethodShowProgressBar);
-      it("should get elements from service", testGetDataMethodGetsDataFromService);
+      it("should get elements from service once", testGetDataMethodGetsDataFromService);
     });
   });
 
