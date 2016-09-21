@@ -1,14 +1,14 @@
 {
-  "name": "discount-ascii-warehouse",
-  "version": "0.2.0",
-  "description": "For all your ascii needs.",
+  "name": "ascii-shop",
+  "version": "1.0.0",
+  "description": "Ascii fonts shop listing page.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "karma start karma.conf.js --debug"
   },
-  "author": "Adam Faryna <adamfaryna@gmail.com>",
-  "license": "",
+  "author": "Adam Faryna <github.com/adamfaryna>",
+  "license": "MIT",
   "dependencies": {
     "cool-ascii-faces": "~1.3.3",
     "ecstatic": "~0.5.4",
