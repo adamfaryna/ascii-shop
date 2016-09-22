@@ -22,9 +22,11 @@ Clone git repo:
 ```git clone https://github.com/adamfaryna/ascii-shop.git```
 
 Install Bower dependencies:
-```npm install```
-```bower install```
-```grunt```
+```
+npm install
+bower install
+grunt
+```
 
 Open in web browser localhost:8000.
 
