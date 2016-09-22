@@ -25,6 +25,7 @@ Install Bower dependencies:
 ```npm install```
 ```bower install```
 ```grunt```
+
 Open in web browser localhost:8000.
 
 ## Have a fun!
