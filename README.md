@@ -21,10 +21,14 @@ Most important used technologies:
 Clone git repo:
 ```git clone https://github.com/adamfaryna/ascii-shop.git```
 
-Install Bower dependencies:
+Install Bower & NodeJS dependencies:
 ```
 npm install
 bower install
+```
+
+Run app:
+```
 grunt
 ```
 
